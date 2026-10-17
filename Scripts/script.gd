@@ -48,7 +48,6 @@ func spawn_player() -> void:
 	var first_cell = horizontal_grid[0]
 	var center_offset = Vector2(cell_width / 2.0, cell_height / 2.0)
 	player_instance.setup_position(first_cell["position"] + center_offset)
-	print("Joueur spawné à la position : ", player_instance.global_position)
 
 func _input(event: InputEvent) -> void:
 	if not player_instance:
