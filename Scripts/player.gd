@@ -4,7 +4,6 @@ var facing_direction: int = 1:
 	set(value):
 		facing_direction = value
 		update_facing_visual()
-@onready var eye_marker: ColorRect = $EyeMarker
 func flip_direction() -> void:
 	facing_direction *= -1
 	
