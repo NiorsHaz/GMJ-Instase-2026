@@ -1,0 +1,13 @@
+[gd_scene format=3 uid="uid://cl3hdih4wx46e"]
+
+[ext_resource type="Script" uid="uid://cafvnwp78flsk" path="res://Scripts/player.gd" id="1_kelma"]
+
+[node name="Player" type="Node2D" unique_id=416720383]
+script = ExtResource("1_kelma")
+
+[node name="ColorRect" type="ColorRect" parent="." unique_id=1982159857]
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+color = Color(0, 0.6351796, 0.63517934, 1)
