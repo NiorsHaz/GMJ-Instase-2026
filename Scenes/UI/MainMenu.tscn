@@ -1,5 +1,7 @@
 [gd_scene format=3 uid="uid://bhujk2syp2oro"]
 
+[ext_resource type="Script" uid="uid://ctmqwskosldwv" path="res://Scripts/UI/main_menu.gd" id="1_g18y6"]
+
 [sub_resource type="LabelSettings" id="LabelSettings_bh75y"]
 resource_local_to_scene = true
 font_size = 100
@@ -9,6 +11,7 @@ resource_local_to_scene = true
 font_size = 40
 
 [node name="MainMenu" type="Node2D" unique_id=1892664953]
+script = ExtResource("1_g18y6")
 
 [node name="Button_manager" type="Control" parent="." unique_id=735508600]
 layout_mode = 3
@@ -57,3 +60,7 @@ offset_right = 359.0
 offset_bottom = 213.0
 text = "Spell-It-Out"
 label_settings = SubResource("LabelSettings_370kx")
+
+[connection signal="pressed" from="Button_manager/VBoxContainer/Start" to="." method="_on_start_pressed"]
+[connection signal="pressed" from="Button_manager/VBoxContainer/Options" to="." method="_on_options_pressed"]
+[connection signal="pressed" from="Button_manager/VBoxContainer/Quit" to="." method="_on_quit_pressed"]
