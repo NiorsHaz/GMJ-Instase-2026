@@ -60,8 +60,6 @@ animations = [{
 
 [sub_resource type="Resource" id="Resource_58ae2"]
 script = ExtResource("4_r6jsd")
-hit = 1
-stun_hit = 6
 name = "Power "
 animations = SubResource("SpriteFrames_ivevv")
 range = 1
@@ -69,7 +67,7 @@ metadata/_custom_type_script = "uid://dl3lc6jj1tdvx"
 
 [sub_resource type="Resource" id="Resource_xa75v"]
 script = ExtResource("3_ivevv")
-word_stats = Array[ExtResource("4_r6jsd")]([SubResource("Resource_58ae2")])
+word_stats = Array[Resource]([SubResource("Resource_58ae2")])
 metadata/_custom_type_script = "uid://b8tu4qv4l0ghw"
 
 [sub_resource type="Resource" id="Resource_q1uoi"]
@@ -121,7 +119,7 @@ animations = [{
 "speed": 5.0
 }]
 
-[node name="Player" type="Node2D" unique_id=416720383]
+[node name="Player" type="CharacterBody2D" unique_id=548813844]
 script = ExtResource("1_kelma")
 stats = SubResource("Resource_q1uoi")
 
