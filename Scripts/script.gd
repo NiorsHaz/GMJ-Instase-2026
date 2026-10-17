@@ -3,6 +3,7 @@ extends Node2D
 @export var cell_width: int = 64
 @export var cell_height: int = 64
 @export var start_position: Vector2 = Vector2(100, 200)
+var books : Bookstats
 
 const PLAYER_SCENE = preload("res://Scene/player.tscn")
 var horizontal_grid: Array = []
@@ -68,6 +69,7 @@ func spawn_player() -> void:
 		return
 	player_instance = PLAYER_SCENE.instantiate()
 	add_child(player_instance)
+	books = player_instance.stats.book
 	player_instance.z_index = 10
 	var first_cell = horizontal_grid[0]
 	var center_offset = Vector2(cell_width / 2.0, cell_height / 2.0)
@@ -110,6 +112,5 @@ func try_move_player(target_index: int) -> void:
 		player_instance.move_to(target_cell["position"] + center_offset, target_index)
 
 func setup_deck() -> void:
-	player_hand.append(ActionTile.new("A",Color.RED, 2, 1, 0))
-	player_hand.append(ActionTile.new("B",Color.CADET_BLUE, 1, 3, 1))
-	player_hand.append(ActionTile.new("C",Color.GREEN_YELLOW, 0, 0, 1))
+	for word in books.word_stats:
+		player_hand.append(ActionTile.new(word.name,Color.RED, word.damage, word.range, word.cooldown))
