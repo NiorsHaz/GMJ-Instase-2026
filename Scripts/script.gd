@@ -112,5 +112,5 @@ func try_move_player(target_index: int) -> void:
 		player_instance.move_to(target_cell["position"] + center_offset, target_index)
 
 func setup_deck() -> void:
-	for word in books.word_stats:
+	for word in books.get_words():
 		player_hand.append(ActionTile.new(word.name,Color.RED, word.damage, word.range, word.cooldown))

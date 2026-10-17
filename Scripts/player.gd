@@ -23,11 +23,9 @@ func _ready() -> void:
 func flip_direction() -> void:
 	facing_direction *= -1
 
-
 func update_facing_visual() -> void:
 	if animation:
 		animation.flip_h = facing_direction < 0
-
 
 func setup_position(target_position: Vector2, initial_direction: int = 1) -> void:
 	global_position = target_position

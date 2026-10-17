@@ -4,6 +4,7 @@
 [ext_resource type="Texture2D" uid="uid://daift5qhpm7tr" path="res://Resource/Tiny RPG Character Asset Pack v1.03 -Free Soldier&Orc/Characters(100x100)/Soldier/Soldier/Soldier-Idle.png" id="2_xa75v"]
 [ext_resource type="Script" uid="uid://b8tu4qv4l0ghw" path="res://Scripts/Classes/books_stats.gd" id="3_ivevv"]
 [ext_resource type="Script" uid="uid://csq6n5mc7lp8u" path="res://Scripts/Classes/players_stats.gd" id="3_xa75v"]
+[ext_resource type="Script" uid="uid://c1indbunfrib1" path="res://Scripts/Classes/word_database.gd" id="4_p6qlh"]
 [ext_resource type="Script" uid="uid://dl3lc6jj1tdvx" path="res://Scripts/Classes/words_stats.gd" id="4_r6jsd"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_2sw5t"]
@@ -56,20 +57,19 @@ animations = [{
 "speed": 5.0
 }]
 
-[sub_resource type="SpriteFrames" id="SpriteFrames_ivevv"]
+[sub_resource type="Resource" id="Resource_ivevv"]
+script = ExtResource("4_r6jsd")
+metadata/_custom_type_script = "uid://dl3lc6jj1tdvx"
 
 [sub_resource type="Resource" id="Resource_58ae2"]
-script = ExtResource("4_r6jsd")
-hit = 1
-stun_hit = 6
-name = "Power "
-animations = SubResource("SpriteFrames_ivevv")
-range = 1
-metadata/_custom_type_script = "uid://dl3lc6jj1tdvx"
+script = ExtResource("4_p6qlh")
+words = Array[ExtResource("4_r6jsd")]([SubResource("Resource_ivevv")])
+metadata/_custom_type_script = "uid://c1indbunfrib1"
 
 [sub_resource type="Resource" id="Resource_xa75v"]
 script = ExtResource("3_ivevv")
-word_stats = Array[ExtResource("4_r6jsd")]([SubResource("Resource_58ae2")])
+word_database = SubResource("Resource_58ae2")
+word_ids = Array[int]([0])
 metadata/_custom_type_script = "uid://b8tu4qv4l0ghw"
 
 [sub_resource type="Resource" id="Resource_q1uoi"]
