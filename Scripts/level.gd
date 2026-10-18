@@ -74,7 +74,7 @@ func _ready() -> void:
 	spawn_player()
 	# spawn_enemy()
 	spawn_enemies(3)
-	#spawn_boss()
+	# spawn_boss()
 	setup_deck()
 	if is_instance_valid(enemy_instance):
 		enemy_instance.call("plan_next_action", player_instance)
@@ -352,19 +352,16 @@ func try_move_player(target_index: int) -> void:
 	var enemy_on_target_before: Node2D = null
 	if is_instance_valid(occupant_before_turn) and occupant_before_turn != player_instance:
 		enemy_on_target_before = occupant_before_turn
-	for enemy in enemies:
-		if is_instance_valid(enemy):
-			enemy.call("execute_prepared_action", self, player_instance)
-	clean_grid_occupants()
+	# swap
 	if is_instance_valid(player_instance):
 		var current_index = int(player_instance.get("current_cell_index"))
 		var current_cell = horizontal_grid[current_index]
 		var actor_offset = Vector2(cell_width / 2.0, -10)
+		var movement_dir = target_index - current_index
 		if enemy_on_target_before != null and is_instance_valid(enemy_on_target_before):
 			var occupant = enemy_on_target_before
 			var occupant_size = int(occupant.get("boss_size")) if "boss_size" in occupant else 1
 			var occupant_start_index = int(occupant.get("current_cell_index"))
-			var movement_dir = target_index - current_index # 1 pour droite, -1 pour gauche
 			if occupant_size == 1:
 				var behind_enemy_index = occupant_start_index + movement_dir
 				var is_behind_free = false
@@ -401,13 +398,20 @@ func try_move_player(target_index: int) -> void:
 					print("Vrai Swap Boss ajusté : Atterrissage du joueur reculé de 1 case !")
 				else:
 					print("Swap Boss impossible : le boss ou le joueur sortirait de la grille.")
+					return
 		else:
 			if target_cell["occupied_by"] != null and target_cell["occupied_by"] != player_instance:
 				print("Bloqué : Un ennemi vient de prendre cette case pendant son mouvement !")
+				return
 			else:
 				current_cell["occupied_by"] = null
 				target_cell["occupied_by"] = player_instance
 				player_instance.call("move_to", target_cell["position"] + actor_offset, target_index)
+				print("Déplacement / Recul effectué.")
+	clean_grid_occupants()
+	for enemy in enemies:
+		if is_instance_valid(enemy):
+			enemy.call("execute_prepared_action", self, player_instance)
 	clean_grid_occupants()
 	for enemy in enemies:
 		if is_instance_valid(enemy):
