@@ -1,0 +1,13 @@
+[gd_scene format=3 uid="uid://ch2o703p65oxg"]
+
+[ext_resource type="Script" uid="uid://ejorh2rwp2fo" path="res://enemy.gd" id="1_cisrx"]
+[ext_resource type="Resource" uid="uid://bvy3sc4i7nepb" path="res://Resource/Data/Enemy/orc.tres" id="2_r5p1p"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_evsvj"]
+
+[node name="Enemy" type="Node2D" unique_id=1588713721]
+script = ExtResource("1_cisrx")
+stats = ExtResource("2_r5p1p")
+
+[node name="animation" type="AnimatedSprite2D" parent="." unique_id=104168628]
+sprite_frames = SubResource("SpriteFrames_evsvj")

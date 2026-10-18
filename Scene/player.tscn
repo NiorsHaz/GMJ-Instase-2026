@@ -4,6 +4,7 @@
 [ext_resource type="Texture2D" uid="uid://daift5qhpm7tr" path="res://Resource/Tiny RPG Character Asset Pack v1.03 -Free Soldier&Orc/Characters(100x100)/Soldier/Soldier/Soldier-Idle.png" id="2_xa75v"]
 [ext_resource type="Script" uid="uid://b8tu4qv4l0ghw" path="res://Scripts/Classes/books_stats.gd" id="3_ivevv"]
 [ext_resource type="Script" uid="uid://csq6n5mc7lp8u" path="res://Scripts/Classes/players_stats.gd" id="3_xa75v"]
+[ext_resource type="Script" uid="uid://c1indbunfrib1" path="res://Scripts/Classes/word_database.gd" id="4_p6qlh"]
 [ext_resource type="Script" uid="uid://dl3lc6jj1tdvx" path="res://Scripts/Classes/words_stats.gd" id="4_r6jsd"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_2sw5t"]
@@ -56,18 +57,28 @@ animations = [{
 "speed": 5.0
 }]
 
-[sub_resource type="SpriteFrames" id="SpriteFrames_ivevv"]
-
-[sub_resource type="Resource" id="Resource_58ae2"]
+[sub_resource type="Resource" id="Resource_r6jsd"]
 script = ExtResource("4_r6jsd")
-name = "Power "
-animations = SubResource("SpriteFrames_ivevv")
+id = 1
+name = "Conjonction"
 range = 1
+cooldown = 1
 metadata/_custom_type_script = "uid://dl3lc6jj1tdvx"
+
+[sub_resource type="Resource" id="Resource_p6qlh"]
+script = ExtResource("4_r6jsd")
+id = 1
+metadata/_custom_type_script = "uid://dl3lc6jj1tdvx"
+
+[sub_resource type="Resource" id="Resource_ivevv"]
+script = ExtResource("4_p6qlh")
+words = Array[ExtResource("4_r6jsd")]([SubResource("Resource_r6jsd"), SubResource("Resource_p6qlh")])
+metadata/_custom_type_script = "uid://c1indbunfrib1"
 
 [sub_resource type="Resource" id="Resource_xa75v"]
 script = ExtResource("3_ivevv")
-word_stats = Array[Resource]([SubResource("Resource_58ae2")])
+word_database = SubResource("Resource_ivevv")
+word_ids = Array[int]([0])
 metadata/_custom_type_script = "uid://b8tu4qv4l0ghw"
 
 [sub_resource type="Resource" id="Resource_q1uoi"]
@@ -119,6 +130,8 @@ animations = [{
 "speed": 5.0
 }]
 
+[sub_resource type="CircleShape2D" id="CircleShape2D_evsvj"]
+
 [node name="Player" type="CharacterBody2D" unique_id=548813844]
 script = ExtResource("1_kelma")
 stats = SubResource("Resource_q1uoi")
@@ -132,3 +145,6 @@ color = Color(0, 0.6351796, 0.63517934, 1)
 
 [node name="animation" type="AnimatedSprite2D" parent="." unique_id=2084107405]
 sprite_frames = SubResource("SpriteFrames_evsvj")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=361133972]
+shape = SubResource("CircleShape2D_evsvj")
