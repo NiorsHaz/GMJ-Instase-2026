@@ -141,17 +141,17 @@ func try_move_player(target_index: int) -> void:
 	if target_index < 0 or target_index >= horizontal_grid.size():
 		return
 	clean_grid_occupants()
+	var target_cell = horizontal_grid[target_index]
+	var occupant_before_turn = target_cell["occupied_by"]
+	var enemy_was_already_on_target = is_instance_valid(occupant_before_turn) and occupant_before_turn == enemy_instance
 	if is_instance_valid(enemy_instance):
 		enemy_instance.call("execute_prepared_action", self, player_instance)
+	clean_grid_occupants()
 	if is_instance_valid(player_instance):
 		var current_index = int(player_instance.get("current_cell_index"))
 		var current_cell = horizontal_grid[current_index]
-		var target_cell = horizontal_grid[target_index]
 		var center_offset = Vector2(cell_width / 2.0, cell_height / 2.0)
-		var occupant = target_cell["occupied_by"]
-		var is_enemy_there = is_instance_valid(occupant) and occupant != player_instance
-		if is_enemy_there:
-			var enemy = occupant
+		if enemy_was_already_on_target and is_instance_valid(enemy_instance):
 			var enemy_index = target_index
 			var movement_dir = target_index - current_index
 			var behind_enemy_index = enemy_index + movement_dir
@@ -160,17 +160,20 @@ func try_move_player(target_index: int) -> void:
 				current_cell["occupied_by"] = null
 				behind_cell["occupied_by"] = player_instance
 				player_instance.call("move_to", behind_cell["position"] + center_offset, behind_enemy_index)
-				print("Faufilage : Le joueur s'est faufilé derrière l'ennemi !")
+				print("Faufilage : Le joueur passe derrière l'ennemi !")
 			else:
-				current_cell["occupied_by"] = enemy
-				enemy.call("setup_position", current_cell["position"] + center_offset, current_index)
+				current_cell["occupied_by"] = enemy_instance
+				enemy_instance.call("setup_position", current_cell["position"] + center_offset, current_index)
 				target_cell["occupied_by"] = player_instance
 				player_instance.call("move_to", target_cell["position"] + center_offset, target_index)
-				print("Swap : Échange de places.")
+				print("Swap : Le joueur échange sa place avec l'ennemi.")
 		else:
-			current_cell["occupied_by"] = null
-			target_cell["occupied_by"] = player_instance
-			player_instance.call("move_to", target_cell["position"] + center_offset, target_index)
+			if target_cell["occupied_by"] != null and target_cell["occupied_by"] != player_instance:
+				print("Bloqué ! L'ennemi a pris la case en premier, le joueur ne bouge pas.")
+			else:
+				current_cell["occupied_by"] = null
+				target_cell["occupied_by"] = player_instance
+				player_instance.call("move_to", target_cell["position"] + center_offset, target_index)
 	clean_grid_occupants()
 	if is_instance_valid(enemy_instance):
 		enemy_instance.call("plan_next_action", player_instance)
