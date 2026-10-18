@@ -15,6 +15,6 @@ texture = ExtResource("2_6nxvy")
 
 [node name="Sol" type="Sprite2D" parent="." unique_id=907096523]
 z_index = -1
-position = Vector2(574, 261.00003)
+position = Vector2(554, 261.00003)
 scale = Vector2(0.82641464, 0.8264147)
 texture = ExtResource("3_bc5pw")
