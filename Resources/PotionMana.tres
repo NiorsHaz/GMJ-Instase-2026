@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="ShopItem" format=3 uid="uid://d24oy0dtmgmv0"]
+
+[ext_resource type="Script" uid="uid://ccfxfn8ictqty" path="res://Scripts/General/ShopItem.gd" id="1_kyccj"]
+
+[resource]
+script = ExtResource("1_kyccj")
+item_name = "Mana"
+price = 300
+metadata/_custom_type_script = "uid://ccfxfn8ictqty"

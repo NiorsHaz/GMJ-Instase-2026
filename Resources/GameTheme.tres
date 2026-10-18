@@ -1,0 +1,45 @@
+[gd_resource type="Theme" format=3 uid="uid://d1n024eaiv47n"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_mc6ul"]
+bg_color = Color(0.3647059, 0.2509804, 0.21568628, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8mkpq"]
+bg_color = Color(0.24313726, 0.15294118, 0.13725491, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.83137256, 0.6862745, 0.21568628, 1)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_jg0xn"]
+bg_color = Color(0.5529412, 0.43137255, 0.3882353, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+
+[resource]
+default_font_size = 0
+Button/colors/font_color = Color(1, 1, 1, 1)
+Button/font_sizes/font_size = 24
+Button/styles/hover = SubResource("StyleBoxFlat_mc6ul")
+Button/styles/normal = SubResource("StyleBoxFlat_8mkpq")
+Button/styles/pressed = SubResource("StyleBoxFlat_jg0xn")
+Label/colors/font_color = Color(0.95686275, 0.9254902, 0.84705883, 1)
+Label/font_sizes/font_size = 20
