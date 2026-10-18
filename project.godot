@@ -16,6 +16,10 @@ config/features=PackedStringArray("4.7", "GL Compatibility")
 boot_splash/bg_color=Color(0.020215545, 0.03819033, 0.00949404, 1)
 config/icon="res://icon.svg"
 
+[autoload]
+
+GameManager="*uid://bj76p7f2r2o3s"
+
 [display]
 
 window/stretch/mode="canvas_items"
