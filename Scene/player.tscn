@@ -152,15 +152,29 @@ range = 1
 cooldown = 1
 metadata/_custom_type_script = "uid://dl3lc6jj1tdvx"
 
+[sub_resource type="Resource" id="Resource_2sw5t"]
+script = ExtResource("7_ij4jb")
+id = 3
+stun_damage = 10
+name = "Bite"
+selling_price = 80
+buying_price = 100
+type_name = "Insult"
+desc = "Saying this and it will shock your enemies"
+hit_type = 2
+range = 4
+cooldown = 5
+metadata/_custom_type_script = "uid://dl3lc6jj1tdvx"
+
 [sub_resource type="Resource" id="Resource_52afc"]
 script = ExtResource("6_2sw5t")
-words = Array[ExtResource("7_ij4jb")]([SubResource("Resource_lccmy"), SubResource("Resource_0rhnv")])
+words = Array[ExtResource("7_ij4jb")]([SubResource("Resource_lccmy"), SubResource("Resource_0rhnv"), SubResource("Resource_2sw5t")])
 metadata/_custom_type_script = "uid://c1indbunfrib1"
 
 [sub_resource type="Resource" id="Resource_xa75v"]
 script = ExtResource("3_ivevv")
 word_database = SubResource("Resource_52afc")
-word_ids = Array[int]([1, 2])
+word_ids = Array[int]([1, 2, 3])
 metadata/_custom_type_script = "uid://b8tu4qv4l0ghw"
 
 [sub_resource type="Resource" id="Resource_q1uoi"]
