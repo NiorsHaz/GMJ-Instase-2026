@@ -292,16 +292,33 @@ func execute_queue() -> void:
 			if is_instance_valid(enemy):
 				var enemy_index = int(enemy.get("current_cell_index"))
 				var enemy_size = int(enemy.get("boss_size")) if "boss_size" in enemy else 1
-				var offset = 0
+				var is_hit = false
 				if facing == 1:
-					offset = enemy_index - player_index
+					for i in range(enemy_size):
+						var target_cell_idx = enemy_index + i
+						var distance = target_cell_idx - player_index
+						if distance > 0 and distance <= tile.range_distance:
+							is_hit = true
+							break
 				else:
-					offset = player_index - (enemy_index + enemy_size - 1)
-				var is_in_front = (facing == 1 and enemy_index > player_index) or (facing == -1 and enemy_index < player_index)
-				if is_in_front and offset > 0 and offset <= tile.range_distance:
+					for i in range(enemy_size):
+						var target_cell_idx = enemy_index + i
+						var distance = player_index - target_cell_idx
+						if distance > 0 and distance <= tile.range_distance:
+							is_hit = true
+							break
+				if is_hit:
 					enemy.call("take_damage", tile.damage)
-					print(tile.tile_name, " (Portée: ", tile.range_distance, ") inflige ", tile.damage, " dégâts à distance !")
+					print(tile.tile_name, " (Portée: ", tile.range_distance, ") inflige ", tile.damage, " dégâts à l'entité !")
 					hit_any_enemy = true
+		if not hit_any_enemy:
+			print(tile.tile_name, " rate sa cible (aucun ennemi à portée).")
+		if tile.cooldown_max > 0:
+			tile.current_cooldown = tile.cooldown_max
+			cooldown_list.append(tile)
+			print(tile.tile_name, " part en cooldown pour ", tile.current_cooldown, " tours.")
+		else:
+			player_hand.append(tile)
 	clean_grid_occupants()
 	for enemy in enemies:
 		if is_instance_valid(enemy):
