@@ -10,10 +10,14 @@ config_version=5
 
 [application]
 
-config/name="Spit : Spell-It-Out"
-config/features=PackedStringArray("4.7", "GL Compatibility")
-boot_splash/bg_color=Color(0.020215545, 0.03819033, 0.00949404, 1)
+config/name="GMJ-Instase-2026-main"
+run/main_scene="uid://e5hxviwrgqvp"
+config/features=PackedStringArray("4.7", "Forward Plus")
 config/icon="res://icon.svg"
+
+[autoload]
+
+GameManager="*uid://bj76p7f2r2o3s"
 
 [display]
 
@@ -27,5 +31,3 @@ window/stretch/aspect="expand"
 [rendering]
 
 rendering_device/driver.windows="d3d12"
-renderer/rendering_method="gl_compatibility"
-renderer/rendering_method.mobile="gl_compatibility"

@@ -1,0 +1,12 @@
+[gd_scene format=3 uid="uid://bfuyx18gkowbo"]
+
+[ext_resource type="Script" uid="uid://dxks3t513dijt" path="res://Scripts/General/TestLogic.gd" id="1_kln2b"]
+[ext_resource type="Resource" uid="uid://c6mfx8j4amu7b" path="res://Resources/Word.tres" id="2_rgh2o"]
+[ext_resource type="Resource" uid="uid://cgtmvsc25qmfa" path="res://Resources/Potion.tres" id="3_pbw6q"]
+
+[node name="Main" type="Node" unique_id=858095658]
+
+[node name="TestLogic" type="Node" parent="." unique_id=1733493601]
+script = ExtResource("1_kln2b")
+word_item = ExtResource("2_rgh2o")
+potion_item = ExtResource("3_pbw6q")
