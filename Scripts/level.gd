@@ -18,6 +18,19 @@ var player_hand: Array[ActionTile] = []
 var action_queue: Array[ActionTile] = []
 var cooldown_list: Array[ActionTile] = []
 
+# ---------------------------------------------------------------
+# LEVEL FLOW: enemies -> boss -> victory (or game over)
+# ---------------------------------------------------------------
+# Optional: pick your scenes in the Inspector. If empty, an overlay is shown
+# with "R" to restart.
+@export_file("*.tscn") var game_over_scene: String = ""
+@export_file("*.tscn") var victory_scene: String = ""
+const BOSS_DELAY := 1.0  # pause before the boss appears (seconds)
+const END_DELAY := 1.2   # pause before the game over / victory screen
+enum Phase { ENEMIES, BOSS, ENDED }
+var phase: Phase = Phase.ENEMIES
+var input_locked := false
+
 
 # ---------------------------------------------------------------
 # LAYOUT (measured from the mockup, 630x353)
@@ -331,6 +344,12 @@ func _get_boss() -> Node2D:
 # INPUT
 # ---------------------------------------------------------------
 func _input(event: InputEvent) -> void:
+	if phase == Phase.ENDED:
+		if event is InputEventKey and event.pressed and not event.echo and event.keycode == KEY_R:
+			get_tree().reload_current_scene()
+		return
+	if input_locked:
+		return
 	if not is_instance_valid(player_instance):
 		return
 	var current_index = int(player_instance.get("current_cell_index"))
@@ -440,6 +459,7 @@ func try_move_player(target_index: int) -> void:
 			enemy.call("plan_next_action", player_instance)
 	tick_cooldowns()
 	queue_redraw()
+	_check_end_conditions()
 	
 func setup_deck() -> void:
 	player_hand.clear()
@@ -466,6 +486,10 @@ func execute_queue() -> void:
 	for enemy in enemies:
 		if is_instance_valid(enemy):
 			enemy.call("execute_prepared_action", self, player_instance)
+	if _player_is_dead():
+		_end_game(false)
+		queue_redraw()
+		return
 	var executing_tiles = action_queue.duplicate()
 	action_queue.clear()
 	for tile in executing_tiles:
@@ -509,6 +533,7 @@ func execute_queue() -> void:
 			enemy.call("plan_next_action", player_instance)
 	tick_cooldowns()
 	queue_redraw()
+	_check_end_conditions()
 
 func tick_cooldowns() -> void:
 	clean_grid_occupants()
@@ -569,3 +594,85 @@ func spawn_boss() -> void:
 	enemies.append(boss_instance)
 	boss_instance.call("plan_next_action", player_instance)
 	print("Boss apparu sur la case ", start_index, " (Taille : ", boss_size, " cases) !")
+
+# ---------------------------------------------------------------
+# WIN / LOSE / BOSS PHASE
+# ---------------------------------------------------------------
+func _player_is_dead() -> bool:
+	return is_instance_valid(player_instance) and int(player_instance.get("health")) <= 0
+
+# A killed enemy is only freed at the end of the frame, so also check
+# is_queued_for_deletion() and its health.
+func _alive_enemy_count() -> int:
+	var count = 0
+	for enemy in enemies:
+		if is_instance_valid(enemy) and not enemy.is_queued_for_deletion() and int(enemy.get("health")) > 0:
+			count += 1
+	return count
+
+# Returns true when something ended or changed the level phase
+func _check_end_conditions() -> bool:
+	if phase == Phase.ENDED:
+		return true
+	if _player_is_dead():
+		_end_game(false)
+		return true
+	if _alive_enemy_count() > 0:
+		return false
+	if phase == Phase.ENEMIES:
+		_start_boss_phase()
+	else:
+		_end_game(true)
+	return true
+
+func _start_boss_phase() -> void:
+	phase = Phase.BOSS
+	input_locked = true
+	print("Tous les ennemis sont vaincus : le boss arrive !")
+	await get_tree().create_timer(BOSS_DELAY).timeout
+	clean_grid_occupants()
+	# Player goes back to the first cell so the boss never spawns on top of them
+	if is_instance_valid(player_instance):
+		player_instance.call("move_to", get_actor_position(0), 0)
+		player_instance.set("facing_direction", 1)
+	clean_grid_occupants()
+	spawn_boss()
+	if _get_boss() == null:
+		push_warning("Le boss n'a pas pu apparaitre : victoire directe.")
+		_end_game(true)
+		return
+	input_locked = false
+	queue_redraw()
+
+func _end_game(won: bool) -> void:
+	if phase == Phase.ENDED:
+		return
+	phase = Phase.ENDED
+	input_locked = true
+	print("VICTOIRE !" if won else "GAME OVER")
+	queue_redraw()
+	await get_tree().create_timer(END_DELAY).timeout
+	var path = victory_scene if won else game_over_scene
+	if path != "" and ResourceLoader.exists(path):
+		get_tree().change_scene_to_file(path)
+	else:
+		_show_end_overlay(won)
+
+# Fallback screen used when no scene is set in the Inspector
+func _show_end_overlay(won: bool) -> void:
+	var layer = CanvasLayer.new()
+	layer.layer = 100
+	add_child(layer)
+	var dim = ColorRect.new()
+	dim.color = Color(0, 0, 0, 0.65)
+	dim.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	dim.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	layer.add_child(dim)
+	var label = Label.new()
+	label.text = ("VICTORY" if won else "GAME OVER") + "\n\nR : restart"
+	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	label.add_theme_font_size_override("font_size", 48)
+	label.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	layer.add_child(label)
