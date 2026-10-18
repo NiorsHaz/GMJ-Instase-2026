@@ -6,6 +6,8 @@
 [ext_resource type="Script" uid="uid://b8tu4qv4l0ghw" path="res://Scripts/Classes/books_stats.gd" id="3_ivevv"]
 [ext_resource type="Texture2D" uid="uid://bmne5cj35ruge" path="res://Resource/Tiny RPG Character Asset Pack v1.03 -Free Soldier&Orc/Characters(100x100)/Soldier/Soldier/Soldier-Hurt.png" id="3_p6qlh"]
 [ext_resource type="Script" uid="uid://csq6n5mc7lp8u" path="res://Scripts/Classes/players_stats.gd" id="3_xa75v"]
+[ext_resource type="Script" uid="uid://c1indbunfrib1" path="res://Scripts/Classes/word_database.gd" id="6_2sw5t"]
+[ext_resource type="Script" uid="uid://dl3lc6jj1tdvx" path="res://Scripts/Classes/words_stats.gd" id="7_ij4jb"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_2sw5t"]
 atlas = ExtResource("2_r6jsd")
@@ -123,8 +125,42 @@ animations = [{
 "speed": 5.0
 }]
 
+[sub_resource type="Resource" id="Resource_lccmy"]
+script = ExtResource("7_ij4jb")
+id = 1
+damage = 2
+stun_damage = 5
+name = "Bash"
+selling_price = 20
+buying_price = 60
+type_name = "Agressive"
+desc = "A charge"
+range = 1
+cooldown = 2
+metadata/_custom_type_script = "uid://dl3lc6jj1tdvx"
+
+[sub_resource type="Resource" id="Resource_0rhnv"]
+script = ExtResource("7_ij4jb")
+id = 2
+damage = 1
+name = "Slap"
+selling_price = 5
+buying_price = 10
+type_name = "Agressive"
+desc = "Feels like a hand slap"
+range = 1
+cooldown = 1
+metadata/_custom_type_script = "uid://dl3lc6jj1tdvx"
+
+[sub_resource type="Resource" id="Resource_52afc"]
+script = ExtResource("6_2sw5t")
+words = Array[ExtResource("7_ij4jb")]([SubResource("Resource_lccmy"), SubResource("Resource_0rhnv")])
+metadata/_custom_type_script = "uid://c1indbunfrib1"
+
 [sub_resource type="Resource" id="Resource_xa75v"]
 script = ExtResource("3_ivevv")
+word_database = SubResource("Resource_52afc")
+word_ids = Array[int]([1, 2])
 metadata/_custom_type_script = "uid://b8tu4qv4l0ghw"
 
 [sub_resource type="Resource" id="Resource_q1uoi"]
