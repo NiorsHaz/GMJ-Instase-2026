@@ -1,0 +1,136 @@
+[gd_resource type="Resource" script_class="EnemyStats" format=3 uid="uid://bvy3sc4i7nepb"]
+
+[ext_resource type="Script" uid="uid://cn10uboxkse7u" path="res://Scripts/Classes/enemy_stats.gd" id="1_1hl1p"]
+[ext_resource type="Texture2D" uid="uid://dtmr08ggl6va8" path="res://Resource/Tiny RPG Character Asset Pack v1.03 -Free Soldier&Orc/Characters(100x100)/Orc/Orc/Orc-Death.png" id="1_fvh6v"]
+[ext_resource type="Texture2D" uid="uid://5s4qhutk68r0" path="res://Resource/Tiny RPG Character Asset Pack v1.03 -Free Soldier&Orc/Characters(100x100)/Orc/Orc/Orc-Idle.png" id="1_sgimr"]
+[ext_resource type="Texture2D" uid="uid://c3s3tsecabgb" path="res://Resource/Tiny RPG Character Asset Pack v1.03 -Free Soldier&Orc/Characters(100x100)/Orc/Orc/Orc-Hurt.png" id="2_f33eb"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_35fn1"]
+atlas = ExtResource("1_fvh6v")
+region = Rect2(0, 0, 100, 100)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_t46el"]
+atlas = ExtResource("1_fvh6v")
+region = Rect2(100, 0, 100, 100)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_t7rla"]
+atlas = ExtResource("1_fvh6v")
+region = Rect2(200, 0, 100, 100)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_47qt1"]
+atlas = ExtResource("1_fvh6v")
+region = Rect2(300, 0, 100, 100)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_d5a1m"]
+atlas = ExtResource("2_f33eb")
+region = Rect2(0, 0, 100, 100)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1x6dh"]
+atlas = ExtResource("2_f33eb")
+region = Rect2(100, 0, 100, 100)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_0khs0"]
+atlas = ExtResource("2_f33eb")
+region = Rect2(200, 0, 100, 100)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_0eofa"]
+atlas = ExtResource("2_f33eb")
+region = Rect2(300, 0, 100, 100)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_m4mka"]
+atlas = ExtResource("1_sgimr")
+region = Rect2(0, 0, 100, 100)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_fvh6v"]
+atlas = ExtResource("1_sgimr")
+region = Rect2(100, 0, 100, 100)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_f33eb"]
+atlas = ExtResource("1_sgimr")
+region = Rect2(200, 0, 100, 100)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_h2pyu"]
+atlas = ExtResource("1_sgimr")
+region = Rect2(300, 0, 100, 100)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_2oppl"]
+atlas = ExtResource("1_sgimr")
+region = Rect2(400, 0, 100, 100)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hfxvy"]
+atlas = ExtResource("1_sgimr")
+region = Rect2(500, 0, 100, 100)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_l55gn"]
+atlas = ExtResource("2_f33eb")
+region = Rect2(0, 0, 100, 100)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_r5p1p"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_35fn1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_t46el")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_t7rla")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_47qt1")
+}],
+"loop": 0,
+"name": &"die",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_d5a1m")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_1x6dh")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_0khs0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_0eofa")
+}],
+"loop": 0,
+"name": &"hurt",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_m4mka")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_fvh6v")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_f33eb")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_h2pyu")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_2oppl")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_hfxvy")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_l55gn")
+}],
+"loop": 1,
+"name": &"idle",
+"speed": 5.0
+}]
+
+[resource]
+script = ExtResource("1_1hl1p")
+name = "orc"
+desc = "iption"
+animations = SubResource("SpriteFrames_r5p1p")
+metadata/_custom_type_script = "uid://cn10uboxkse7u"
