@@ -2,8 +2,26 @@
 
 [ext_resource type="Script" uid="uid://c105a1o0542wa" path="res://Scripts/UI/ItemSlot.gd" id="1_0qyjl"]
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_l2tbr"]
+bg_color = Color(1, 1, 1, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.98039216, 0.7137255, 0.20392157, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_0qyjl"]
+bg_color = Color(1, 1, 1, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.98039216, 0.7137255, 0.20392157, 1)
+
 [node name="ItemSlot" type="Button" unique_id=498506637 node_paths=PackedStringArray("icon_rect", "price_label")]
 custom_minimum_size = Vector2(100, 100)
+theme_override_styles/normal = SubResource("StyleBoxFlat_l2tbr")
+theme_override_styles/hover = SubResource("StyleBoxFlat_0qyjl")
 script = ExtResource("1_0qyjl")
 icon_rect = NodePath("Icon")
 price_label = NodePath("PriceLabel")
