@@ -35,9 +35,6 @@ func move_to(target_position: Vector2, new_index: int) -> void:
 
 
 func take_damage(amount: int) -> void:
-	if is_invulnerable_this_turn:
-		print("Dégâts annulés : swap")
-		return
 	health -= amount
 	if health < 0:
 		health = 0
