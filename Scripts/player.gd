@@ -7,6 +7,7 @@ var facing_direction: int = 1:
 	set(value):
 		facing_direction = value
 		update_facing_visual()
+var is_invulnerable_this_turn: bool = false
 
 func _ready() -> void:
 	if stats != null:
@@ -34,24 +35,21 @@ func move_to(target_position: Vector2, new_index: int) -> void:
 
 
 func take_damage(amount: int) -> void:
+	if is_invulnerable_this_turn:
+		print("Dégâts annulés : swap")
+		return
 	health -= amount
-
 	if health < 0:
 		health = 0
-
 	print("Player HP: ", health)
-
 	if health <= 0:
 		print("Player defeated!")
 		return
-
 	if animation == null or animation.sprite_frames == null:
 		return
-
 	if animation.sprite_frames.has_animation("hurt"):
 		animation.play("hurt")
 		await animation.animation_finished
-
 	if is_instance_valid(animation) and health > 0:
 		if animation.sprite_frames.has_animation("idle"):
 			animation.play("idle")

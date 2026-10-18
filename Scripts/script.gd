@@ -196,6 +196,14 @@ func try_move_player(target_index: int) -> void:
 	var enemy_on_target_before: Node2D = null
 	if is_instance_valid(occupant_before_turn) and occupant_before_turn != player_instance:
 		enemy_on_target_before = occupant_before_turn
+	# invulnerabilite
+	if is_instance_valid(player_instance):
+		player_instance.set("is_invulnerable_this_turn", false)
+		# swap/faufilage
+		if enemy_on_target_before != null and is_instance_valid(enemy_on_target_before):
+			player_instance.set("is_invulnerable_this_turn", true)
+			print("Swap détecté : Le joueur est invulnérable pour ce tour !")
+	# attaque enemie
 	for enemy in enemies:
 		if is_instance_valid(enemy):
 			enemy.call("execute_prepared_action", self, player_instance)
@@ -208,7 +216,7 @@ func try_move_player(target_index: int) -> void:
 			var occupant = enemy_on_target_before
 			var occupant_size = int(occupant.get("boss_size")) if "boss_size" in occupant else 1
 			var occupant_start_index = int(occupant.get("current_cell_index"))
-			var movement_dir = target_index - current_index # 1 pour droite, -1 pour gauche
+			var movement_dir = target_index - current_index 
 			if occupant_size == 1:
 				var behind_enemy_index = occupant_start_index + movement_dir
 				var is_behind_free = false
