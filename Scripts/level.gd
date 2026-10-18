@@ -73,8 +73,8 @@ func _ready() -> void:
 	generate_grid()
 	spawn_player()
 	# spawn_enemy()
-	spawn_enemies(3)
-	# spawn_boss()
+	# spawn_enemies(3)
+	spawn_boss()
 	setup_deck()
 	if is_instance_valid(enemy_instance):
 		enemy_instance.call("plan_next_action", player_instance)

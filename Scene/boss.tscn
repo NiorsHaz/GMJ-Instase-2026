@@ -1,14 +1,71 @@
 [gd_scene format=3 uid="uid://imn1gps0qpoj"]
 
 [ext_resource type="Script" uid="uid://c3bvxgwmid7d5" path="res://Scripts/Scriptsboss.gd" id="1_mi78u"]
+[ext_resource type="Texture2D" uid="uid://b3ab6pyyfa75t" path="res://Assets/Images/Protagonists/boss_phase_1.png" id="2_46auw"]
 [ext_resource type="Script" uid="uid://cn10uboxkse7u" path="res://Scripts/Classes/enemy_stats.gd" id="2_bv8a7"]
+[ext_resource type="Texture2D" uid="uid://bojp78fpqjhui" path="res://Assets/Images/Protagonists/boss_phase_2.png" id="3_lcnog"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_fvh6v"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_46auw")
+}],
+"loop": 1,
+"name": &"die",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("3_lcnog")
+}],
+"loop": 1,
+"name": &"die2",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_46auw")
+}],
+"loop": 1,
+"name": &"hurt",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("3_lcnog")
+}],
+"loop": 1,
+"name": &"hurt2",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_46auw")
+}],
+"loop": 1,
+"name": &"idle",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("3_lcnog")
+}],
+"loop": 1,
+"name": &"idle2",
+"speed": 5.0
+}]
 
 [sub_resource type="Resource" id="Resource_mi78u"]
 script = ExtResource("2_bv8a7")
+animations = SubResource("SpriteFrames_fvh6v")
 metadata/_custom_type_script = "uid://cn10uboxkse7u"
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_mjb07"]
 
 [node name="Boss" type="Node2D" unique_id=1640688386]
 script = ExtResource("1_mi78u")
 stats = SubResource("Resource_mi78u")
 
 [node name="animation" type="AnimatedSprite2D" parent="." unique_id=801322083]
+sprite_frames = SubResource("SpriteFrames_mjb07")
