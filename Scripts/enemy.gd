@@ -31,6 +31,7 @@ func setup_position(target_position: Vector2, cell_index: int, _grid_size: int =
 	current_cell_index = cell_index
 
 func execute_prepared_action(grid: Node, player: Node2D) -> void:
+	HitFlash.stop_blink(animation)
 	if health <= 0 or not is_instance_valid(player):
 		return
 	if current_stun > 0:
@@ -60,6 +61,7 @@ func execute_prepared_action(grid: Node, player: Node2D) -> void:
 			move_toward_player(grid, player_index)
 
 func plan_next_action(player: Node2D) -> void:
+	HitFlash.stop_blink(animation)
 	if health <= 0 or not is_instance_valid(player):
 		planned_action = "NONE"
 		return
@@ -71,6 +73,7 @@ func plan_next_action(player: Node2D) -> void:
 		return
 	if can_attack_player(player_index):
 		planned_action = "ATTACK"
+		HitFlash.start_blink(animation)
 		print(stats.name, " prépare une attaque !")
 		return
 	planned_action = "MOVE"

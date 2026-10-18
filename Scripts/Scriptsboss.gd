@@ -57,6 +57,7 @@ func execute_prepared_action(grid: Node, player: Node2D) -> void:
 			move_toward_player(grid, player_index)
 
 func plan_next_action(player: Node2D) -> void:
+	HitFlash.stop_blink(animation)
 	if health <= 0 or not is_instance_valid(player):
 		planned_action = "NONE"
 		return
@@ -68,6 +69,7 @@ func plan_next_action(player: Node2D) -> void:
 		return
 	if can_attack_player(player_index):
 		planned_action = "ATTACK"
+		HitFlash.start_blink(animation)
 		var attacks = ["ATTACK_QUICK", "ATTACK_HEAVY", "ATTACK_AREA"]
 		planned_attack_type = attacks[randi() % attacks.size()]
 		print("Boss planifie : ATTACK (", planned_attack_type, ")")
@@ -76,6 +78,7 @@ func plan_next_action(player: Node2D) -> void:
 	print("Boss planifie : MOVE")
 
 func execute_boss_attack(player: Node2D, attack_type: String) -> void:
+	HitFlash.stop_blink(animation)
 	var player_index = int(player.get("current_cell_index"))
 	var base_dmg = stats.damage if (stats != null and "damage" in stats) else 2
 	match attack_type:
@@ -130,9 +133,7 @@ func move_toward_player(grid: Node, _player_index: int) -> void:
 	for i in range(boss_size):
 		var new_idx = current_cell_index + i
 		cells[new_idx]["occupied_by"] = self
-	var cell_width = float(grid.get("cell_width"))
-	var actor_offset = Vector2((cell_width * boss_size) / 2.0, -10)
-	global_position = cells[current_cell_index]["position"] + actor_offset
+	global_position = grid.call("get_actor_position", current_cell_index, boss_size)
 	print("Boss s'est déplacé vers la case index : ", current_cell_index)
 
 func take_damage(amount: int) -> void:
@@ -141,6 +142,7 @@ func take_damage(amount: int) -> void:
 	health -= amount
 	if health < 0:
 		health = 0
+	HitFlash.flash(animation, Color.WHITE)
 	print("Boss subit ", amount, " dégâts. PV restants : ", health)
 	if health <= 0:
 		die()
