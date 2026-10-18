@@ -1,0 +1,147 @@
+[gd_scene format=3 uid="uid://bydglx8tml8fx"]
+
+[ext_resource type="Script" uid="uid://ckgrcyytr3lvi" path="res://Scripts/UI/ShopUI.gd" id="1_fmib7"]
+[ext_resource type="PackedScene" uid="uid://bxrfh1q1eebgb" path="res://Scenes/UI/ItemSlot.tscn" id="2_6drr4"]
+[ext_resource type="Texture2D" uid="uid://boni428h7fl8d" path="res://Assets/Art/boky.png" id="2_vovli"]
+[ext_resource type="Script" uid="uid://ccfxfn8ictqty" path="res://Scripts/General/ShopItem.gd" id="3_mkado"]
+[ext_resource type="Texture2D" uid="uid://cxike43asd4no" path="res://Assets/Art/money.png" id="4_4rje5"]
+[ext_resource type="Resource" uid="uid://c6mfx8j4amu7b" path="res://Resources/Word.tres" id="4_qeag5"]
+[ext_resource type="Texture2D" uid="uid://ci603bvylq635" path="res://Assets/Art/inventaire.png" id="5_aufc5"]
+[ext_resource type="Resource" uid="uid://cgtmvsc25qmfa" path="res://Resources/Potion.tres" id="5_c1fsl"]
+[ext_resource type="Texture2D" uid="uid://dmy2xnhdkxagw" path="res://Assets/Art/final rendu.png" id="6_ee5au"]
+[ext_resource type="Resource" uid="uid://d24oy0dtmgmv0" path="res://Resources/PotionMana.tres" id="6_mkado"]
+[ext_resource type="Resource" uid="uid://cx0t83fk7iree" path="res://Resources/ScrollFire.tres" id="7_qeag5"]
+[ext_resource type="Resource" uid="uid://3hdsag4buorb" path="res://Resources/Sword.tres" id="8_c1fsl"]
+[ext_resource type="Resource" uid="uid://dentrf0tduna7" path="res://Resources/Shield.tres" id="9_qeag5"]
+
+[node name="ShopUi" type="Control" unique_id=1673469737 node_paths=PackedStringArray("item_grid", "money_label", "large_icon", "item_name_label", "item_price_label", "buy_button", "owned_count_label", "small_item_icon")]
+layout_mode = 3
+anchors_preset = 0
+script = ExtResource("1_fmib7")
+item_grid = NodePath("ItemGrid")
+money_label = NodePath("MoneyLabel")
+large_icon = NodePath("ItemIconLarge")
+item_name_label = NodePath("ItemNameLabel")
+item_price_label = NodePath("ItemPriceLabel")
+buy_button = NodePath("BuyButton")
+owned_count_label = NodePath("OwnedCountLabel")
+small_item_icon = NodePath("SmallItemIcon")
+item_slot_scene = ExtResource("2_6drr4")
+items_for_sale = Array[ExtResource("3_mkado")]([ExtResource("5_c1fsl"), ExtResource("4_qeag5"), ExtResource("6_mkado"), ExtResource("7_qeag5"), ExtResource("8_c1fsl"), ExtResource("9_qeag5")])
+
+[node name="BackgroundImage" type="TextureRect" parent="." unique_id=764281962]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 3.0
+offset_top = 4.0
+offset_right = 1153.0
+offset_bottom = 658.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("6_ee5au")
+
+[node name="GridPanelImage" type="TextureRect" parent="." unique_id=1845367532]
+layout_mode = 0
+offset_left = 3.0
+offset_top = 2.0
+offset_right = 149.0
+offset_bottom = 192.0
+
+[node name="ItemGrid" type="GridContainer" parent="." unique_id=33739313]
+layout_mode = 0
+offset_left = 37.0
+offset_top = 40.0
+offset_right = 111.0
+offset_bottom = 114.0
+theme_override_constants/h_separation = 30
+theme_override_constants/v_separation = 30
+columns = 3
+
+[node name="BookFrame" type="TextureRect" parent="." unique_id=1550293404]
+layout_mode = 0
+offset_left = 855.0
+offset_top = 186.0
+offset_right = 1065.0
+offset_bottom = 497.5
+texture = ExtResource("2_vovli")
+expand_mode = 1
+
+[node name="ItemIconLarge" type="TextureRect" parent="." unique_id=895328304]
+layout_mode = 0
+offset_left = 900.0
+offset_top = 278.0
+offset_right = 1022.0
+offset_bottom = 400.0
+
+[node name="ItemNameLabel" type="Label" parent="." unique_id=1907857703]
+layout_mode = 0
+offset_left = 894.0
+offset_top = 278.0
+offset_right = 1012.0
+offset_bottom = 331.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 40
+text = "WORD"
+
+[node name="ItemPriceLabel" type="Label" parent="." unique_id=1696288785]
+layout_mode = 0
+offset_left = 910.0
+offset_top = 374.0
+offset_right = 996.0
+offset_bottom = 416.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 30
+text = "5000$"
+
+[node name="BuyButton" type="Button" parent="." unique_id=578355891]
+layout_mode = 0
+offset_left = 849.0
+offset_top = 528.0
+offset_right = 1067.0
+offset_bottom = 578.0
+theme_override_font_sizes/font_size = 25
+text = "Buy
+"
+
+[node name="MoneyIcon" type="TextureRect" parent="." unique_id=897149499]
+layout_mode = 0
+offset_left = 21.0
+offset_top = 492.0
+offset_right = 141.0
+offset_bottom = 612.0
+texture = ExtResource("4_4rje5")
+
+[node name="MoneyLabel" type="Label" parent="." unique_id=301856625]
+layout_mode = 0
+offset_left = 148.0
+offset_top = 548.0
+offset_right = 291.0
+offset_bottom = 635.0
+theme_override_font_sizes/font_size = 30
+text = "
+"
+
+[node name="InventoryBookIcon" type="TextureRect" parent="." unique_id=845374100]
+layout_mode = 0
+offset_left = 388.0
+offset_top = 501.0
+offset_right = 508.0
+offset_bottom = 621.0
+texture = ExtResource("5_aufc5")
+
+[node name="OwnedCountLabel" type="Label" parent="." unique_id=2055202048]
+layout_mode = 0
+offset_left = 530.0
+offset_top = 561.0
+offset_right = 570.0
+offset_bottom = 603.0
+theme_override_font_sizes/font_size = 30
+
+[node name="SmallItemIcon" type="TextureRect" parent="." unique_id=420205497]
+layout_mode = 0
+offset_left = 196.0
+offset_top = 510.0
+offset_right = 316.0
+offset_bottom = 630.0
