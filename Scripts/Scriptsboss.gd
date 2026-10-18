@@ -34,7 +34,7 @@ func setup_position(target_position: Vector2, start_cell_index: int, grid_cells_
 	current_cell_index = start_cell_index
 	if current_cell_index + boss_size > grid_cells_count:
 		current_cell_index = grid_cells_count - boss_size
-	global_position = target_position
+	global_position = Vector2(target_position.x, target_position.y)
 	print("Boss positionné à l'index : ", current_cell_index)
 
 func execute_prepared_action(grid: Node, player: Node2D) -> void:

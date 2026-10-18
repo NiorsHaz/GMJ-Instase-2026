@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://cafvnwp78flsk" path="res://Scripts/player.gd" id="1_kelma"]
 [ext_resource type="Texture2D" uid="uid://b4k20unmmrdgh" path="res://Assets/Images/Protagonists/prota_2.png" id="2_2sw5t"]
 [ext_resource type="Texture2D" uid="uid://daift5qhpm7tr" path="res://Resource/Tiny RPG Character Asset Pack v1.03 -Free Soldier&Orc/Characters(100x100)/Soldier/Soldier/Soldier-Idle.png" id="2_xa75v"]
-[ext_resource type="Script" uid="uid://csq6n5mc7lp8u" path="res://Scripts/Classes/players_stats.gd" id="3_xa75v"]
+[ext_resource type="Script" uid="uid://ldf5r1uwc56p" path="res://Scripts/Classes/players_stats.gd" id="3_xa75v"]
 [ext_resource type="Resource" uid="uid://dqbv2rvv3qvew" path="res://Resource/Books/Poetry.tres" id="5_r6jsd"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_r6jsd"]

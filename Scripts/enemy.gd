@@ -4,7 +4,7 @@ extends Node2D
 var current_cell_index: int = -1
 var health: int = 0
 var current_stun: int = 0
-var facing_direction: int = -1:
+var facing_direction: int = 1:
 	set(value):
 		facing_direction = value
 		update_facing_visual()
@@ -24,10 +24,10 @@ func _ready() -> void:
 
 func update_facing_visual() -> void:
 	if animation:
-		animation.flip_h = (facing_direction < 0)
+		animation.flip_h = (facing_direction > 0)
 
 func setup_position(target_position: Vector2, cell_index: int, _grid_size: int = 0) -> void:
-	global_position = target_position
+	global_position = Vector2(target_position.x, target_position.y)
 	current_cell_index = cell_index
 
 func execute_prepared_action(grid: Node, player: Node2D) -> void:
@@ -89,10 +89,11 @@ func move_toward_player(grid: Node, player_index: int) -> void:
 		cells[current_cell_index]["occupied_by"] = null
 	target_cell["occupied_by"] = self
 	current_cell_index = target_index
-	var cell_width = float(grid.get("cell_width"))
-	var cell_height = float(grid.get("cell_height"))
-	var actor_offset = Vector2(cell_width / 2.0, -10)
-	global_position = target_cell["position"] + actor_offset
+	global_position = grid.call("get_actor_position", target_index)
+	#var cell_width = float(grid.get("cell_width"))
+	#var cell_height = float(grid.get("cell_height"))
+	#var actor_offset = Vector2(cell_width / 2.0, -10)
+	#global_position = target_cell["position"] + actor_offset
 
 func take_damage(amount: int) -> void:
 	if health <= 0:

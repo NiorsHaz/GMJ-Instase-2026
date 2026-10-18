@@ -18,13 +18,14 @@ var player_hand: Array[ActionTile] = []
 var action_queue: Array[ActionTile] = []
 var cooldown_list: Array[ActionTile] = []
 
+
 # ---------------------------------------------------------------
 # LAYOUT (measured from the mockup, 630x353)
 # X values are ratios of the screen WIDTH, Y / size / step values
 # are ratios of the screen HEIGHT. Tweak everything here.
 # ---------------------------------------------------------------
 # Grid: centered horizontally, only the Y is a ratio
-const GRID_Y := 0.705
+const GRID_Y := 0.805
 
 # Boss hearts (top center, only during the boss phase)
 const TOP_HEARTS_Y := 0.017
@@ -66,6 +67,10 @@ const DEFAULT_MAX_HP := 10
 const ENEMY_HEART_SIZE := 10.0
 const ENEMY_HEART_GAP := 2.0
 
+# Actors stand ON TOP of the cells (feet on the cell's top edge)
+const ACTOR_HEIGHT := 100.0         
+const ACTOR_PIVOT_AT_FEET := false 
+
 func _ready() -> void:
 	_update_layout()
 	get_viewport().size_changed.connect(_update_layout)
@@ -73,8 +78,8 @@ func _ready() -> void:
 	generate_grid()
 	spawn_player()
 	# spawn_enemy()
-	# spawn_enemies(3)
-	spawn_boss()
+	spawn_enemies(3)
+	#spawn_boss()
 	setup_deck()
 	if is_instance_valid(enemy_instance):
 		enemy_instance.call("plan_next_action", player_instance)
@@ -123,6 +128,16 @@ func _column_mid_y(first: Rect2, last: Rect2) -> float:
 func _font_for(tile: Rect2) -> int:
 	return clampi(int(tile.size.y * 0.2), 8, 16)
 
+func _actor_offset(cells: int = 1) -> Vector2:
+	var y = 0.0 if ACTOR_PIVOT_AT_FEET else -ACTOR_HEIGHT / 2.0
+	return Vector2(cell_width * cells / 2.0, y)
+
+func _actor_head_offset() -> float:
+	return ACTOR_HEIGHT if ACTOR_PIVOT_AT_FEET else ACTOR_HEIGHT / 2.0
+
+func get_actor_position(index: int, cells: int = 1) -> Vector2:
+	return horizontal_grid[index]["position"] + _actor_offset(cells)
+
 # ---------------------------------------------------------------
 # GRID / SPAWN
 # ---------------------------------------------------------------
@@ -151,7 +166,7 @@ func spawn_player() -> void:
 	if player_stats != null:
 		books = player_stats.get("book")
 	var first_cell = horizontal_grid[0]
-	var actor_offset = Vector2(cell_width / 2.0, -10)
+	var actor_offset = _actor_offset()
 	player_instance.call("setup_position", first_cell["position"] + actor_offset, 0)
 	first_cell["occupied_by"] = player_instance
 
@@ -162,7 +177,7 @@ func spawn_enemy() -> void:
 	add_child(enemy_instance)
 	var enemy_index = horizontal_grid.size() - 1
 	var enemy_cell = horizontal_grid[enemy_index]
-	var center_offset = Vector2(cell_width / 2.0, cell_height / 2.0)
+	var center_offset = _actor_offset()
 	enemy_instance.call("setup_position", enemy_cell["position"] + center_offset, enemy_index)
 	enemy_instance.z_index = 10
 	enemy_cell["occupied_by"] = enemy_instance
@@ -186,7 +201,7 @@ func spawn_enemies(count: int) -> void:
 			continue
 		add_child(new_enemy)
 		new_enemy.z_index = 10
-		var actor_offset = Vector2(cell_width / 2.0, -10)
+		var actor_offset = _actor_offset()
 		new_enemy.call("setup_position", target_cell["position"] + actor_offset, target_cell["index"])
 		target_cell["occupied_by"] = new_enemy
 		enemies.append(new_enemy)
@@ -228,7 +243,7 @@ func _draw() -> void:
 		if is_instance_valid(enemy) and enemy != boss:
 			var e_hp = int(enemy.get("health"))
 			var e_max = _get_max_hp(enemy, e_hp)
-			var head_pos = enemy.global_position + Vector2(0, -cell_height / 2.0 - 10 - ENEMY_HEART_SIZE)
+			var head_pos = enemy.global_position + Vector2(0, -_actor_head_offset() - ENEMY_HEART_SIZE - 2)
 			_draw_hearts(e_hp, e_max, head_pos.x, head_pos.y, ENEMY_HEART_SIZE, ENEMY_HEART_GAP, Color(0.9, 0.2, 0.3))
 	
 	# --- Player hearts (bottom center) ---
@@ -359,7 +374,7 @@ func try_move_player(target_index: int) -> void:
 	if is_instance_valid(player_instance):
 		var current_index = int(player_instance.get("current_cell_index"))
 		var current_cell = horizontal_grid[current_index]
-		var actor_offset = Vector2(cell_width / 2.0, -10)
+		var actor_offset = _actor_offset()
 		var movement_dir = target_index - current_index
 		if enemy_on_target_before != null and is_instance_valid(enemy_on_target_before):
 			var occupant = enemy_on_target_before
@@ -392,7 +407,7 @@ func try_move_player(target_index: int) -> void:
 				if player_new_index >= 0 and player_new_index < horizontal_grid.size() and new_boss_index >= 0 and (new_boss_index + occupant_size) <= horizontal_grid.size():
 					current_cell["occupied_by"] = null
 					var cell_width_val = float(cell_width)
-					var boss_offset = Vector2((cell_width_val * occupant_size) / 2.0, -10.0)
+					var boss_offset = _actor_offset(occupant_size)
 					var new_boss_cell = horizontal_grid[new_boss_index]
 					occupant.call("setup_position", new_boss_cell["position"] + boss_offset, new_boss_index, cell_count)
 					var target_swap_cell = horizontal_grid[player_new_index]
@@ -540,7 +555,7 @@ func spawn_boss() -> void:
 		start_index = 1
 	var target_cell = horizontal_grid[start_index]
 	var cell_width_val = float(cell_width)
-	var actor_offset = Vector2((cell_width_val * boss_size) / 2.0, -10.0)
+	var actor_offset = _actor_offset(boss_size)
 	boss_instance.call("setup_position", target_cell["position"] + actor_offset, start_index, cell_count)
 	for i in range(boss_size):
 		if start_index + i < horizontal_grid.size():

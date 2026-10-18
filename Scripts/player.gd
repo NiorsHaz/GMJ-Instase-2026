@@ -25,7 +25,7 @@ func update_facing_visual() -> void:
 		animation.flip_h = (facing_direction < 0)
 
 func setup_position(target_position: Vector2, new_index: int = -1) -> void:
-	global_position = target_position
+	global_position = Vector2(target_position.x, target_position.y)
 	if new_index >= 0:
 		current_cell_index = new_index
 
