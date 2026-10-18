@@ -6,6 +6,7 @@ extends Node2D
 var books: Bookstats
 const PLAYER_SCENE = preload("res://Scene/player.tscn")
 const ENEMY_SCENE = preload("res://Scene/Enemy/enemy.tscn")
+const BOSS_SCENE = preload("res://Scene/boss.tscn")
 var horizontal_grid: Array = []
 var player_instance: Node2D = null
 var enemy_instance: Node2D = null
@@ -24,7 +25,8 @@ func _ready() -> void:
 	generate_grid()
 	spawn_player()
 	# spawn_enemy()
-	spawn_enemies(2)
+	# spawn_enemies(2)
+	spawn_boss()
 	setup_deck()
 	if is_instance_valid(enemy_instance):
 		enemy_instance.call("plan_next_action", player_instance)
@@ -43,15 +45,20 @@ func generate_grid() -> void:
 func spawn_player() -> void:
 	if horizontal_grid.is_empty():
 		return
+	if PLAYER_SCENE == null:
+		return
 	player_instance = PLAYER_SCENE.instantiate()
+	if player_instance == null:
+		return
 	add_child(player_instance)
+	player_instance.z_index = 10
 	var player_stats = player_instance.get("stats")
 	if player_stats != null:
 		books = player_stats.get("book")
 	player_instance.z_index = 10
 	var first_cell = horizontal_grid[0]
-	var center_offset = Vector2(cell_width / 2.0, cell_height / 2.0)
-	player_instance.call("setup_position", first_cell["position"] + center_offset, 0)
+	var actor_offset = Vector2(cell_width / 2.0, -10)
+	player_instance.call("setup_position", first_cell["position"] + actor_offset, 0)
 	first_cell["occupied_by"] = player_instance
 
 func spawn_enemy() -> void:
@@ -80,29 +87,45 @@ func spawn_enemies(count: int) -> void:
 		if spawned_count >= count:
 			break
 		var target_cell = free_cells[i]
-		enemy_instance = ENEMY_SCENE.instantiate()
-		add_child(enemy_instance)
-		var center_offset = Vector2(cell_width / 2.0, cell_height / 2.0)
-		enemy_instance.call("setup_position", target_cell["position"] + center_offset, target_cell["index"])
-		enemy_instance.z_index = 10
-		target_cell["occupied_by"] = enemy_instance
-		enemies.append(enemy_instance)
-		enemy_instance.call("plan_next_action", player_instance)
+		var new_enemy = ENEMY_SCENE.instantiate()
+		if new_enemy == null:
+			continue
+		add_child(new_enemy)
+		new_enemy.z_index = 10
+		var actor_offset = Vector2(cell_width / 2.0, -10)
+		new_enemy.call("setup_position", target_cell["position"] + actor_offset, target_cell["index"])
+		target_cell["occupied_by"] = new_enemy
+		enemies.append(new_enemy)
+		new_enemy.call("plan_next_action", player_instance)
 		spawned_count += 1
 		
 func _draw() -> void:
 	for cell in horizontal_grid:
 		var rect = Rect2(cell["position"], Vector2(cell_width, cell_height))
-		draw_rect(rect, Color(0.2, 0.2, 0.3), true)
-		draw_rect(rect, Color(0.8, 0.8, 0.8), false, 2.0)
+		var occupant = cell["occupied_by"]
+		var fill_color = Color(0.15, 0.15, 0.2)
+		var border_color = Color(0.4, 0.4, 0.5)
+		var border_thickness = 2.0
+		if is_instance_valid(occupant):
+			if occupant == player_instance:
+				fill_color = Color(0.1, 0.4, 0.6, 0.8)
+				border_color = Color(0.3, 0.8, 1.0)
+				border_thickness = 3.5
+			else:
+				fill_color = Color(0.6, 0.15, 0.15, 0.8)
+				border_color = Color(1.0, 0.3, 0.3)
+				border_thickness = 3.5
+		draw_rect(rect, fill_color, true)
+		draw_rect(rect, border_color, false, border_thickness)
+		draw_string(ThemeDB.fallback_font, cell["position"] + Vector2(5, 18), str(cell["index"]), HORIZONTAL_ALIGNMENT_LEFT, -1, 12, Color(1, 1, 1, 0.3))
 	if is_instance_valid(player_instance):
 		var p_hp = player_instance.get("health")
-		var p_pos = player_instance.global_position + Vector2(-20, 45)
-		draw_string(ThemeDB.fallback_font, p_pos, "PV: " + str(p_hp), HORIZONTAL_ALIGNMENT_CENTER, -1, 14, Color.GREEN)
+		var p_pos = player_instance.global_position + Vector2(-20, -cell_height / 2.0 - 10)
+		draw_string(ThemeDB.fallback_font, p_pos, "PV: " + str(p_hp), HORIZONTAL_ALIGNMENT_CENTER, -1, 14, Color.CYAN)
 	for enemy in enemies:
 		if is_instance_valid(enemy):
 			var e_hp = enemy.get("health")
-			var e_pos = enemy.global_position + Vector2(-20, 45)
+			var e_pos = enemy.global_position + Vector2(-20, -cell_height / 2.0 - 10)
 			draw_string(ThemeDB.fallback_font, e_pos, "PV: " + str(e_hp), HORIZONTAL_ALIGNMENT_CENTER, -1, 14, Color.RED)
 	draw_string(ThemeDB.fallback_font, HAND_POS + Vector2(0, -15), "Main", HORIZONTAL_ALIGNMENT_LEFT, -1, 16, Color.WHITE)
 	for i in range(player_hand.size()):
@@ -126,7 +149,7 @@ func _draw() -> void:
 		draw_rect(cd_rect, Color.DARK_GRAY, false, 2.0)
 		draw_string(ThemeDB.fallback_font, cd_rect.position + Vector2(5, 30), tile.tile_name, HORIZONTAL_ALIGNMENT_LEFT, 50, 12, Color.LIGHT_GRAY)
 		draw_string(ThemeDB.fallback_font, cd_rect.position + Vector2(15, 60), "CD: " + str(tile.current_cooldown), HORIZONTAL_ALIGNMENT_LEFT, -1, 16, Color.YELLOW)
-
+		
 func _input(event: InputEvent) -> void:
 	if not is_instance_valid(player_instance):
 		return
@@ -180,40 +203,62 @@ func try_move_player(target_index: int) -> void:
 	if is_instance_valid(player_instance):
 		var current_index = int(player_instance.get("current_cell_index"))
 		var current_cell = horizontal_grid[current_index]
-		var center_offset = Vector2(cell_width / 2.0, cell_height / 2.0)
+		var actor_offset = Vector2(cell_width / 2.0, -10)
 		if enemy_on_target_before != null and is_instance_valid(enemy_on_target_before):
-			var enemy_index = target_index
-			var movement_dir = target_index - current_index
-			var behind_enemy_index = enemy_index + movement_dir
-			var is_behind_free = false
-			if behind_enemy_index >= 0 and behind_enemy_index < horizontal_grid.size():
-				is_behind_free = (horizontal_grid[behind_enemy_index]["occupied_by"] == null)
-			if is_behind_free:
-				var behind_cell = horizontal_grid[behind_enemy_index]
-				current_cell["occupied_by"] = null
-				behind_cell["occupied_by"] = player_instance
-				player_instance.call("move_to", behind_cell["position"] + center_offset, behind_enemy_index)
-				print("Faufilage : Le joueur s'est faufilé derrière l'ennemi le plus proche !")
+			var occupant = enemy_on_target_before
+			var occupant_size = int(occupant.get("boss_size")) if "boss_size" in occupant else 1
+			var occupant_start_index = int(occupant.get("current_cell_index"))
+			var movement_dir = target_index - current_index # 1 pour droite, -1 pour gauche
+			if occupant_size == 1:
+				var behind_enemy_index = occupant_start_index + movement_dir
+				var is_behind_free = false
+				if behind_enemy_index >= 0 and behind_enemy_index < horizontal_grid.size():
+					is_behind_free = (horizontal_grid[behind_enemy_index]["occupied_by"] == null)
+				if is_behind_free:
+					var behind_cell = horizontal_grid[behind_enemy_index]
+					current_cell["occupied_by"] = null
+					behind_cell["occupied_by"] = player_instance
+					player_instance.call("move_to", behind_cell["position"] + actor_offset, behind_enemy_index)
+					print("Faufilage : Le joueur s'est faufilé derrière l'ennemi !")
+				else:
+					current_cell["occupied_by"] = occupant
+					occupant.call("setup_position", current_cell["position"] + actor_offset, current_index, cell_count)
+					target_cell["occupied_by"] = player_instance
+					player_instance.call("move_to", target_cell["position"] + actor_offset, target_index)
+					print("Swap Sandwich : Échange de position avec l'ennemi direct !")
 			else:
-				current_cell["occupied_by"] = enemy_on_target_before
-				enemy_on_target_before.call("setup_position", current_cell["position"] + center_offset, current_index)
-				target_cell["occupied_by"] = player_instance
-				player_instance.call("move_to", target_cell["position"] + center_offset, target_index)
-				print("Swap Sandwich : Le joueur a échangé sa place avec l'ennemi adjacent direct !")
+				var new_boss_index = occupant_start_index - movement_dir
+				var player_new_index = 0
+				if movement_dir > 0:
+					player_new_index = occupant_start_index + occupant_size - 1
+				else:
+					player_new_index = occupant_start_index
+				if player_new_index >= 0 and player_new_index < horizontal_grid.size() and new_boss_index >= 0 and (new_boss_index + occupant_size) <= horizontal_grid.size():
+					current_cell["occupied_by"] = null
+					var cell_width_val = float(cell_width)
+					var boss_offset = Vector2((cell_width_val * occupant_size) / 2.0, -10.0)
+					var new_boss_cell = horizontal_grid[new_boss_index]
+					occupant.call("setup_position", new_boss_cell["position"] + boss_offset, new_boss_index, cell_count)
+					var target_swap_cell = horizontal_grid[player_new_index]
+					target_swap_cell["occupied_by"] = player_instance
+					player_instance.call("move_to", target_swap_cell["position"] + actor_offset, player_new_index)
+					print("Vrai Swap Boss ajusté : Atterrissage du joueur reculé de 1 case !")
+				else:
+					print("Swap Boss impossible : le boss ou le joueur sortirait de la grille.")
 		else:
 			if target_cell["occupied_by"] != null and target_cell["occupied_by"] != player_instance:
 				print("Bloqué : Un ennemi vient de prendre cette case pendant son mouvement !")
 			else:
 				current_cell["occupied_by"] = null
 				target_cell["occupied_by"] = player_instance
-				player_instance.call("move_to", target_cell["position"] + center_offset, target_index)
+				player_instance.call("move_to", target_cell["position"] + actor_offset, target_index)
 	clean_grid_occupants()
 	for enemy in enemies:
 		if is_instance_valid(enemy):
 			enemy.call("plan_next_action", player_instance)
 	tick_cooldowns()
 	queue_redraw()
-
+	
 func setup_deck() -> void:
 	player_hand.clear()
 	action_queue.clear()
@@ -293,5 +338,36 @@ func clean_grid_occupants() -> void:
 	for enemy in enemies:
 		if is_instance_valid(enemy):
 			var e_idx = int(enemy.get("current_cell_index"))
-			if e_idx >= 0 and e_idx < horizontal_grid.size():
-				horizontal_grid[e_idx]["occupied_by"] = enemy
+			var size = 1
+			if "boss_size" in enemy:
+				size = int(enemy.get("boss_size"))
+			for i in range(size):
+				var target_idx = e_idx + i
+				if target_idx >= 0 and target_idx < horizontal_grid.size():
+					horizontal_grid[target_idx]["occupied_by"] = enemy
+
+func spawn_boss() -> void:
+	if horizontal_grid.is_empty() or BOSS_SCENE == null:
+		print("Erreur : Impossible de charger BOSS_SCENE.")
+		return
+	var boss_instance = BOSS_SCENE.instantiate()
+	if boss_instance == null:
+		return
+	add_child(boss_instance)
+	boss_instance.z_index = 10
+	var boss_size = boss_instance.get("boss_size")
+	if boss_size == null:
+		boss_size = 2
+	var start_index = cell_count - boss_size
+	if start_index <= 0:
+		start_index = 1
+	var target_cell = horizontal_grid[start_index]
+	var cell_width_val = float(cell_width)
+	var actor_offset = Vector2((cell_width_val * boss_size) / 2.0, -10.0)
+	boss_instance.call("setup_position", target_cell["position"] + actor_offset, start_index, cell_count)
+	for i in range(boss_size):
+		if start_index + i < horizontal_grid.size():
+			horizontal_grid[start_index + i]["occupied_by"] = boss_instance
+	enemies.append(boss_instance)
+	boss_instance.call("plan_next_action", player_instance)
+	print("Boss apparu sur la case ", start_index, " (Taille : ", boss_size, " cases) !")

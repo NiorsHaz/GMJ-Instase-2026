@@ -114,13 +114,6 @@ animations = [{
 script = ExtResource("1_kelma")
 stats = SubResource("Resource_q1uoi")
 
-[node name="ColorRect" type="ColorRect" parent="." unique_id=1982159857]
-offset_left = -20.0
-offset_top = -20.0
-offset_right = 20.0
-offset_bottom = 20.0
-color = Color(0, 0.6351796, 0.63517934, 1)
-
 [node name="animation" type="AnimatedSprite2D" parent="." unique_id=2084107405]
 sprite_frames = SubResource("SpriteFrames_evsvj")
 

@@ -90,8 +90,8 @@ func move_toward_player(grid: Node, player_index: int) -> void:
 	current_cell_index = target_index
 	var cell_width = float(grid.get("cell_width"))
 	var cell_height = float(grid.get("cell_height"))
-	var center = Vector2(cell_width / 2.0, cell_height / 2.0)
-	global_position = target_cell["position"] + center
+	var actor_offset = Vector2(cell_width / 2.0, -10)
+	global_position = target_cell["position"] + actor_offset
 
 func take_damage(amount: int) -> void:
 	if health <= 0:
