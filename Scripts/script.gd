@@ -9,6 +9,7 @@ const ENEMY_SCENE = preload("res://Scene/Enemy/enemy.tscn")
 var horizontal_grid: Array = []
 var player_instance: Node2D = null
 var enemy_instance: Node2D = null
+var enemies: Array = []
 var player_hand: Array[ActionTile] = []
 var action_queue: Array[ActionTile] = []
 var cooldown_list: Array[ActionTile] = []
@@ -22,7 +23,8 @@ const COOLDOWN_POS = Vector2(500, 400)
 func _ready() -> void:
 	generate_grid()
 	spawn_player()
-	spawn_enemy()
+	# spawn_enemy()
+	spawn_enemies(2)
 	setup_deck()
 	if is_instance_valid(enemy_instance):
 		enemy_instance.call("plan_next_action", player_instance)
@@ -64,6 +66,30 @@ func spawn_enemy() -> void:
 	enemy_instance.z_index = 10
 	enemy_cell["occupied_by"] = enemy_instance
 
+func spawn_enemies(count: int) -> void:
+	var max_allowed = int(cell_count / 2.0)
+	if count > max_allowed:
+		print("Attention : Nombre d'ennemis trop élevé (Max autorisé : ", max_allowed, "). Ajusté à ", max_allowed)
+		count = max_allowed
+	var free_cells: Array = []
+	for cell in horizontal_grid:
+		if cell["occupied_by"] == null:
+			free_cells.append(cell)
+	var spawned_count = 0
+	for i in range(free_cells.size() - 1, -1, -1):
+		if spawned_count >= count:
+			break
+		var target_cell = free_cells[i]
+		var enemy_instance = ENEMY_SCENE.instantiate()
+		add_child(enemy_instance)
+		var center_offset = Vector2(cell_width / 2.0, cell_height / 2.0)
+		enemy_instance.call("setup_position", target_cell["position"] + center_offset, target_cell["index"])
+		enemy_instance.z_index = 10
+		target_cell["occupied_by"] = enemy_instance
+		enemies.append(enemy_instance)
+		enemy_instance.call("plan_next_action", player_instance)
+		spawned_count += 1
+		
 func _draw() -> void:
 	for cell in horizontal_grid:
 		var rect = Rect2(cell["position"], Vector2(cell_width, cell_height))
@@ -73,10 +99,11 @@ func _draw() -> void:
 		var p_hp = player_instance.get("health")
 		var p_pos = player_instance.global_position + Vector2(-20, 45)
 		draw_string(ThemeDB.fallback_font, p_pos, "PV: " + str(p_hp), HORIZONTAL_ALIGNMENT_CENTER, -1, 14, Color.GREEN)
-	if is_instance_valid(enemy_instance):
-		var e_hp = enemy_instance.get("health")
-		var e_pos = enemy_instance.global_position + Vector2(-20, 45)
-		draw_string(ThemeDB.fallback_font, e_pos, "PV: " + str(e_hp), HORIZONTAL_ALIGNMENT_CENTER, -1, 14, Color.RED)
+	for enemy in enemies:
+		if is_instance_valid(enemy):
+			var e_hp = enemy.get("health")
+			var e_pos = enemy.global_position + Vector2(-20, 45)
+			draw_string(ThemeDB.fallback_font, e_pos, "PV: " + str(e_hp), HORIZONTAL_ALIGNMENT_CENTER, -1, 14, Color.RED)
 	draw_string(ThemeDB.fallback_font, HAND_POS + Vector2(0, -15), "Main", HORIZONTAL_ALIGNMENT_LEFT, -1, 16, Color.WHITE)
 	for i in range(player_hand.size()):
 		var tile = player_hand[i]
@@ -143,15 +170,18 @@ func try_move_player(target_index: int) -> void:
 	clean_grid_occupants()
 	var target_cell = horizontal_grid[target_index]
 	var occupant_before_turn = target_cell["occupied_by"]
-	var enemy_was_already_on_target = is_instance_valid(occupant_before_turn) and occupant_before_turn == enemy_instance
-	if is_instance_valid(enemy_instance):
-		enemy_instance.call("execute_prepared_action", self, player_instance)
+	var enemy_on_target_before = null
+	if is_instance_valid(occupant_before_turn) and occupant_before_turn != player_instance:
+		enemy_on_target_before = occupant_before_turn
+	for enemy in enemies:
+		if is_instance_valid(enemy):
+			enemy.call("execute_prepared_action", self, player_instance)
 	clean_grid_occupants()
 	if is_instance_valid(player_instance):
 		var current_index = int(player_instance.get("current_cell_index"))
 		var current_cell = horizontal_grid[current_index]
 		var center_offset = Vector2(cell_width / 2.0, cell_height / 2.0)
-		if enemy_was_already_on_target and is_instance_valid(enemy_instance):
+		if enemy_on_target_before != null and is_instance_valid(enemy_on_target_before):
 			var enemy_index = target_index
 			var movement_dir = target_index - current_index
 			var behind_enemy_index = enemy_index + movement_dir
@@ -160,23 +190,22 @@ func try_move_player(target_index: int) -> void:
 				current_cell["occupied_by"] = null
 				behind_cell["occupied_by"] = player_instance
 				player_instance.call("move_to", behind_cell["position"] + center_offset, behind_enemy_index)
-				print("Faufilage : Le joueur passe derrière l'ennemi !")
 			else:
-				current_cell["occupied_by"] = enemy_instance
-				enemy_instance.call("setup_position", current_cell["position"] + center_offset, current_index)
+				current_cell["occupied_by"] = enemy_on_target_before
+				enemy_on_target_before.call("setup_position", current_cell["position"] + center_offset, current_index)
 				target_cell["occupied_by"] = player_instance
 				player_instance.call("move_to", target_cell["position"] + center_offset, target_index)
-				print("Swap : Le joueur échange sa place avec l'ennemi.")
 		else:
 			if target_cell["occupied_by"] != null and target_cell["occupied_by"] != player_instance:
-				print("Bloqué ! L'ennemi a pris la case en premier, le joueur ne bouge pas.")
+				print("Bloqué par un ennemi qui vient d'avancer !")
 			else:
 				current_cell["occupied_by"] = null
 				target_cell["occupied_by"] = player_instance
 				player_instance.call("move_to", target_cell["position"] + center_offset, target_index)
 	clean_grid_occupants()
-	if is_instance_valid(enemy_instance):
-		enemy_instance.call("plan_next_action", player_instance)
+	for enemy in enemies:
+		if is_instance_valid(enemy):
+			enemy.call("plan_next_action", player_instance)
 	tick_cooldowns()
 	queue_redraw()
 
@@ -239,14 +268,19 @@ func tick_cooldowns() -> void:
 			cooldown_list.remove_at(i)
 		i -= 1
 
+# degager les enemies mort
 func clean_grid_occupants() -> void:
 	for cell in horizontal_grid:
 		cell["occupied_by"] = null
+	for i in range(enemies.size() - 1, -1, -1):
+		if not is_instance_valid(enemies[i]):
+			enemies.remove_at(i)
 	if is_instance_valid(player_instance):
 		var p_idx = int(player_instance.get("current_cell_index"))
 		if p_idx >= 0 and p_idx < horizontal_grid.size():
 			horizontal_grid[p_idx]["occupied_by"] = player_instance
-	if is_instance_valid(enemy_instance):
-		var e_idx = int(enemy_instance.get("current_cell_index"))
-		if e_idx >= 0 and e_idx < horizontal_grid.size():
-			horizontal_grid[e_idx]["occupied_by"] = enemy_instance
+	for enemy in enemies:
+		if is_instance_valid(enemy):
+			var e_idx = int(enemy.get("current_cell_index"))
+			if e_idx >= 0 and e_idx < horizontal_grid.size():
+				horizontal_grid[e_idx]["occupied_by"] = enemy
