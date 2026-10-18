@@ -40,11 +40,12 @@ const PLAYER_HEART_GAP := 0.007
 const PLAYER_LABEL_Y := 0.9
 
 # Main (hand): column on the right
-const HAND_X := 0.924
+const HAND_X := 0.82
 const HAND_Y := 0.221
 const HAND_TILE := 0.105
 const HAND_STEP := 0.131
 const HAND_SLOTS := 4
+const HAND_W := 0.16
 
 # Cooldown: column on the left
 const COOLDOWN_X := 0.022
@@ -113,7 +114,10 @@ func _column_rect(i: int, x_ratio: float, y_ratio: float, tile_ratio: float, ste
 	return Rect2(pos, Vector2(tile, tile))
 
 func _hand_rect(i: int) -> Rect2:
-	return _column_rect(i, HAND_X, HAND_Y, HAND_TILE, HAND_STEP)
+	var vp = _screen()
+	var pos = Vector2(vp.x * HAND_X, vp.y * HAND_Y + i * vp.y * HAND_STEP)
+	var tile_size = Vector2(vp.x * HAND_W, vp.y * HAND_TILE)
+	return Rect2(pos, tile_size)
 
 func _queue_rect(i: int) -> Rect2:
 	return _column_rect(i, QUEUE_X, QUEUE_Y, QUEUE_TILE, QUEUE_STEP)
