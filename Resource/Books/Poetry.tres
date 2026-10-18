@@ -1,8 +1,8 @@
 [gd_resource type="Resource" script_class="Bookstats" format=3 uid="uid://dqbv2rvv3qvew"]
 
-[ext_resource type="Script" uid="uid://br7kd688a4wuy" path="res://Scripts/Classes/books_stats.gd" id="1_mjb07"]
+[ext_resource type="Script" uid="uid://b8tu4qv4l0ghw" path="res://Scripts/Classes/books_stats.gd" id="1_mjb07"]
 [ext_resource type="Script" uid="uid://c1indbunfrib1" path="res://Scripts/Classes/word_database.gd" id="2_o3lwt"]
-[ext_resource type="Script" uid="uid://bsr1qakdb1j8g" path="res://Scripts/Classes/words_stats.gd" id="3_daxo1"]
+[ext_resource type="Script" uid="uid://dl3lc6jj1tdvx" path="res://Scripts/Classes/words_stats.gd" id="3_daxo1"]
 
 [sub_resource type="Resource" id="Resource_lccmy"]
 script = ExtResource("3_daxo1")
