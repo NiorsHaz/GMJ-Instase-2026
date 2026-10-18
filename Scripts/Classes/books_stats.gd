@@ -10,6 +10,8 @@ extends Resource
 @export var desc: String = "Test de description"
 @export var animations: SpriteFrames
 @export var icons: Texture2D
+@export var selling_price : int = 0
+@export var buying_price : int = 0
 
 @export_group("book_words")
 @export var word_database: WordDatabases

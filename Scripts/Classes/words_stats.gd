@@ -10,6 +10,8 @@ extends Resource
 @export var name: String = "Nom d'un mot"
 @export var animations: SpriteFrames
 @export var icon: Texture2D
+@export var selling_price : int = 0
+@export var buying_price : int = 0
 
 @export_group("word_type_stats")
 @export var type_name: String = "Nom du type"

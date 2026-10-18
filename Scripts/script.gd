@@ -467,10 +467,13 @@ func advance_turn() -> void:
 
 		if tile.current_cooldown <= 0:
 			tile.current_cooldown = 0
-
 			player_hand.append(tile)
 			cooldown_list.remove_at(i)
 
 		i -= 1
 
 	queue_redraw()
+
+	# Enemy takes its turn after the player's action.
+	if is_instance_valid(enemy_instance):
+		enemy_instance.take_turn(self, player_instance)

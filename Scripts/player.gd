@@ -5,7 +5,18 @@ extends Node2D
 @onready var animation: AnimatedSprite2D = $animation
 
 var current_cell_index: int = 0
+var health : int
 
+func take_damage(amount: int) -> void:
+	health -= amount
+
+	if health < 0:
+		health = 0
+
+	print("Player HP: ", health)
+
+	if health <= 0:
+		print("Player defeated!")
 var facing_direction: int = 1:
 	set(value):
 		facing_direction = value
@@ -13,6 +24,7 @@ var facing_direction: int = 1:
 
 
 func _ready() -> void:
+	var health = stats.pv
 	if stats != null:
 		animation.sprite_frames = stats.animations
 		animation.play("idle")
