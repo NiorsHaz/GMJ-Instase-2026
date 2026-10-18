@@ -1,0 +1,12 @@
+[gd_scene format=3 uid="uid://drd5hwo1sebbc"]
+
+[ext_resource type="Script" uid="uid://hhans7t2tte2" path="res://Scripts/level_tutorial.gd" id="1_nfiew"]
+
+[node name="LevelTutorial" type="Node2D" unique_id=339793330]
+script = ExtResource("1_nfiew")
+
+[node name="UI_Tutorial" type="CanvasLayer" parent="." unique_id=884817977]
+
+[node name="InstructionLabel" type="Label" parent="UI_Tutorial" unique_id=1052743200]
+offset_right = 40.0
+offset_bottom = 23.0

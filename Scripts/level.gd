@@ -268,9 +268,9 @@ func _draw() -> void:
 		draw_rect(tile_rect, tile.tile_color, true)
 		draw_rect(tile_rect, Color.WHITE, false, 2.0)
 		draw_string(font, tile_rect.position + Vector2(tile_rect.size.x * 0.08, tile_rect.size.y * 0.3), tile.tile_name, HORIZONTAL_ALIGNMENT_LEFT, tile_rect.size.x * 0.84, _font_for(tile_rect), Color.WHITE)
-		draw_string(font, tile_rect.position + Vector2(tile_rect.size.x * 0.08, tile_rect.size.y * 0.5), "D "+ str(tile.damage), HORIZONTAL_ALIGNMENT_LEFT, tile_rect.size.x * 0.84, _font_for(tile_rect), Color.WHITE)
-		draw_string(font, tile_rect.position + Vector2(tile_rect.size.x * 0.08, tile_rect.size.y * 0.7), "R "+ str(tile.range_distance), HORIZONTAL_ALIGNMENT_LEFT, tile_rect.size.x * 0.84, _font_for(tile_rect), Color.WHITE)
-		draw_string(font, tile_rect.position + Vector2(tile_rect.size.x * 0.08, tile_rect.size.y * 0.9), "CD "+ str(tile.cooldown_max), HORIZONTAL_ALIGNMENT_LEFT, tile_rect.size.x * 0.84, _font_for(tile_rect), Color.WHITE)
+		draw_string(font, tile_rect.position + Vector2(tile_rect.size.x * 0.08, tile_rect.size.y * 0.5), "Damage : "+ str(tile.damage), HORIZONTAL_ALIGNMENT_LEFT, tile_rect.size.x * 0.84, _font_for(tile_rect), Color.WHITE)
+		draw_string(font, tile_rect.position + Vector2(tile_rect.size.x * 0.08, tile_rect.size.y * 0.7), "Range : "+ str(tile.range_distance), HORIZONTAL_ALIGNMENT_LEFT, tile_rect.size.x * 0.84, _font_for(tile_rect), Color.WHITE)
+		draw_string(font, tile_rect.position + Vector2(tile_rect.size.x * 0.08, tile_rect.size.y * 0.9), "CD : "+ str(tile.cooldown_max), HORIZONTAL_ALIGNMENT_LEFT, tile_rect.size.x * 0.84, _font_for(tile_rect), Color.WHITE)
 	
 	# --- Queue, small column, label on its right ---
 	var queue_first = _queue_rect(0)
