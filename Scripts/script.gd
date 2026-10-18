@@ -1,12 +1,16 @@
 extends Node2D
 @export var cell_count: int = 6
-@export var cell_width: int = 64
-@export var cell_height: int = 64
-@export var start_position: Vector2 = Vector2(100, 200)
+@export var cell_width: int = 82
+@export var cell_height: int = 32
+@export var start_ratio: Vector2 = Vector2(0.3, 0.8)
+var start_position: Vector2
+
 var books: Bookstats
+
 const PLAYER_SCENE = preload("res://Scene/player.tscn")
 const ENEMY_SCENE = preload("res://Scene/Enemy/enemy.tscn")
 const BOSS_SCENE = preload("res://Scene/boss.tscn")
+
 var horizontal_grid: Array = []
 var player_instance: Node2D = null
 var enemy_instance: Node2D = null
@@ -22,14 +26,20 @@ const QUEUE_POS = Vector2(100, 540)
 const COOLDOWN_POS = Vector2(500, 400)
 
 func _ready() -> void:
+	_update_start_position()
+	get_viewport().size_changed.connect(_update_start_position)
+	
 	generate_grid()
 	spawn_player()
 	# spawn_enemy()
-	#spawn_enemies(2)
+	spawn_enemies(3)
 	#spawn_boss()
 	setup_deck()
 	if is_instance_valid(enemy_instance):
 		enemy_instance.call("plan_next_action", player_instance)
+
+func _update_start_position() -> void:
+	start_position = get_viewport().get_visible_rect().size * start_ratio
 
 func generate_grid() -> void:
 	horizontal_grid.clear()
@@ -108,12 +118,12 @@ func _draw() -> void:
 		var border_thickness = 2.0
 		if is_instance_valid(occupant):
 			if occupant == player_instance:
-				fill_color = Color(0.1, 0.4, 0.6, 0.8)
-				border_color = Color(0.3, 0.8, 1.0)
+				#fill_color = Color(0.1, 0.4, 0.6, 0.8)
+				#border_color = Color(0.3, 0.8, 1.0)
 				border_thickness = 3.5
 			else:
-				fill_color = Color(0.6, 0.15, 0.15, 0.8)
-				border_color = Color(1.0, 0.3, 0.3)
+				#fill_color = Color(0.6, 0.15, 0.15, 0.8)
+				#border_color = Color(1.0, 0.3, 0.3)
 				border_thickness = 3.5
 		draw_rect(rect, fill_color, true)
 		draw_rect(rect, border_color, false, border_thickness)

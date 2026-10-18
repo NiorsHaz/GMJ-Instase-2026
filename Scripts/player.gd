@@ -2,7 +2,7 @@ extends Node2D
 @export var stats: PlayersStats 
 @onready var animation: AnimatedSprite2D = $animation
 var current_cell_index: int = 0
-var health: int = 10
+var health : int = 10
 var facing_direction: int = 1:
 	set(value):
 		facing_direction = value
@@ -11,7 +11,7 @@ var is_invulnerable_this_turn: bool = false
 
 func _ready() -> void:
 	if stats != null:
-		health = stats.pv
+		health = stats.pv_max
 		if stats.animations != null:
 			animation.sprite_frames = stats.animations
 			animation.play("idle")
