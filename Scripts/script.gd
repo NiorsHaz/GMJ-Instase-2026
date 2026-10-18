@@ -186,7 +186,7 @@ func _input(event: InputEvent) -> void:
 					queue_redraw()
 					return
 
-# logique du swap de position
+# logique swap de position
 func try_move_player(target_index: int) -> void:
 	if target_index < 0 or target_index >= horizontal_grid.size():
 		return
@@ -196,10 +196,7 @@ func try_move_player(target_index: int) -> void:
 	var enemy_on_target_before: Node2D = null
 	if is_instance_valid(occupant_before_turn) and occupant_before_turn != player_instance:
 		enemy_on_target_before = occupant_before_turn
-	for enemy in enemies:
-		if is_instance_valid(enemy):
-			enemy.call("execute_prepared_action", self, player_instance)
-	clean_grid_occupants()
+	var movement_success = false
 	if is_instance_valid(player_instance):
 		var current_index = int(player_instance.get("current_cell_index"))
 		var current_cell = horizontal_grid[current_index]
@@ -219,13 +216,15 @@ func try_move_player(target_index: int) -> void:
 					current_cell["occupied_by"] = null
 					behind_cell["occupied_by"] = player_instance
 					player_instance.call("move_to", behind_cell["position"] + actor_offset, behind_enemy_index)
-					print("Faufilage : Le joueur s'est faufilé derrière l'ennemi !")
+					print("Faufilage réussi !")
+					movement_success = true
 				else:
 					current_cell["occupied_by"] = occupant
 					occupant.call("setup_position", current_cell["position"] + actor_offset, current_index, cell_count)
 					target_cell["occupied_by"] = player_instance
 					player_instance.call("move_to", target_cell["position"] + actor_offset, target_index)
-					print("Swap Sandwich : Échange de position avec l'ennemi direct !")
+					print("Swap Sandwich réussi !")
+					movement_success = true
 			else:
 				var new_boss_index = occupant_start_index - movement_dir
 				var player_new_index = 0
@@ -242,16 +241,25 @@ func try_move_player(target_index: int) -> void:
 					var target_swap_cell = horizontal_grid[player_new_index]
 					target_swap_cell["occupied_by"] = player_instance
 					player_instance.call("move_to", target_swap_cell["position"] + actor_offset, player_new_index)
-					print("Vrai Swap Boss ajusté : Atterrissage du joueur reculé de 1 case !")
+					print("Vrai Swap Boss réussi !")
+					movement_success = true
 				else:
-					print("Swap Boss impossible : le boss ou le joueur sortirait de la grille.")
+					print("Swap Boss impossible : mouvement hors limites.")
 		else:
 			if target_cell["occupied_by"] != null and target_cell["occupied_by"] != player_instance:
-				print("Bloqué : Un ennemi vient de prendre cette case pendant son mouvement !")
+				print("Bloqué : Un ennemi vient de prendre cette case.")
 			else:
 				current_cell["occupied_by"] = null
 				target_cell["occupied_by"] = player_instance
 				player_instance.call("move_to", target_cell["position"] + actor_offset, target_index)
+				print("Déplacement / Recul réussi !")
+				movement_success = true
+		if movement_success:
+			player_instance.set("is_invulnerable_this_turn", true)
+	clean_grid_occupants()
+	for enemy in enemies:
+		if is_instance_valid(enemy):
+			enemy.call("execute_prepared_action", self, player_instance)
 	clean_grid_occupants()
 	for enemy in enemies:
 		if is_instance_valid(enemy):
