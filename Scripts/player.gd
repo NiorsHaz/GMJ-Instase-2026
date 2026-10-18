@@ -38,6 +38,7 @@ func take_damage(amount: int) -> void:
 	health -= amount
 	if health < 0:
 		health = 0
+	HitFlash.flash(animation, Color.RED)
 	print("Player HP: ", health)
 	if health <= 0:
 		print("Player defeated!")

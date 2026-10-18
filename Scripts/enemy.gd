@@ -105,6 +105,7 @@ func take_damage(amount: int) -> void:
 	if health <= 0:
 		die()
 		return
+	HitFlash.flash(animation, Color.WHITE)
 	if animation.sprite_frames.has_animation("hurt"):
 		animation.play("hurt")
 		await animation.animation_finished
