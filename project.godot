@@ -11,6 +11,7 @@ config_version=5
 [application]
 
 config/name="Spit : Spell-It-Out"
+run/main_scene="uid://dupqr2qe5ocv8"
 config/features=PackedStringArray("4.7", "GL Compatibility")
 boot_splash/bg_color=Color(0.020215545, 0.03819033, 0.00949404, 1)
 config/icon="res://icon.svg"
