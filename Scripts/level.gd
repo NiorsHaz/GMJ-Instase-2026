@@ -443,6 +443,8 @@ func setup_deck() -> void:
 	cooldown_list.clear()
 	if books != null:
 		var words = books.get_words()
+		words.shuffle()
+		words = words.slice(0, 4)
 		for word in words:
 			var cd = word.cooldown
 			if cd <= 0:
