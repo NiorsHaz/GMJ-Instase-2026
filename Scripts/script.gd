@@ -80,7 +80,7 @@ func spawn_enemies(count: int) -> void:
 		if spawned_count >= count:
 			break
 		var target_cell = free_cells[i]
-		var enemy_instance = ENEMY_SCENE.instantiate()
+		enemy_instance = ENEMY_SCENE.instantiate()
 		add_child(enemy_instance)
 		var center_offset = Vector2(cell_width / 2.0, cell_height / 2.0)
 		enemy_instance.call("setup_position", target_cell["position"] + center_offset, target_cell["index"])
@@ -225,34 +225,40 @@ func setup_deck() -> void:
 		player_hand.append(ActionTile.new("Attaque " + str(extra_id), Color.DODGER_BLUE, 1, 1, 2))
 	queue_redraw()
 
+# gestion des action
 func execute_queue() -> void:
 	if action_queue.is_empty():
 		return
-	if is_instance_valid(enemy_instance):
-		enemy_instance.call("execute_prepared_action", self, player_instance)
+	for enemy in enemies:
+		if is_instance_valid(enemy):
+			enemy.call("execute_prepared_action", self, player_instance)
 	var executing_tiles = action_queue.duplicate()
 	action_queue.clear()
 	for tile in executing_tiles:
-		if is_instance_valid(enemy_instance):
-			var enemy_index = int(enemy_instance.get("current_cell_index"))
-			var player_index = int(player_instance.get("current_cell_index"))
-			var facing = int(player_instance.get("facing_direction"))
-			var offset = enemy_index - player_index
-			var is_in_front = (facing == 1 and offset > 0) or (facing == -1 and offset < 0)
-			var distance = abs(offset)
-			if is_in_front and distance <= tile.range_distance:
-				enemy_instance.call("take_damage", tile.damage)
-				print(tile.tile_name, " inflige ", tile.damage, " dégâts à l'ennemi !")
-			else:
-				print(tile.tile_name, " rate sa cible.")
+		var player_index = int(player_instance.get("current_cell_index"))
+		var facing = int(player_instance.get("facing_direction"))
+		var hit_any_enemy = false
+		for enemy in enemies:
+			if is_instance_valid(enemy):
+				var enemy_index = int(enemy.get("current_cell_index"))
+				var offset = enemy_index - player_index
+				var is_in_front = (facing == 1 and offset > 0) or (facing == -1 and offset < 0)
+				var distance = abs(offset)
+				if is_in_front and distance <= tile.range_distance:
+					enemy.call("take_damage", tile.damage)
+					print(tile.tile_name, " inflige ", tile.damage, " dégâts à l'ennemi en case ", enemy_index, " !")
+					hit_any_enemy = true
+		if not hit_any_enemy:
+			print(tile.tile_name, " rate sa cible (aucun ennemi à portée dans la direction du joueur).")
 		if tile.cooldown_max > 0:
 			tile.start_cooldown()
 			cooldown_list.append(tile)
 		else:
 			player_hand.append(tile)
 	clean_grid_occupants()
-	if is_instance_valid(enemy_instance):
-		enemy_instance.call("plan_next_action", player_instance)
+	for enemy in enemies:
+		if is_instance_valid(enemy):
+			enemy.call("plan_next_action", player_instance)
 	tick_cooldowns()
 	queue_redraw()
 
