@@ -136,6 +136,7 @@ func _input(event: InputEvent) -> void:
 					queue_redraw()
 					return
 
+# logique du swap de position
 func try_move_player(target_index: int) -> void:
 	if target_index < 0 or target_index >= horizontal_grid.size():
 		return
