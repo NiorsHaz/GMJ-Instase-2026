@@ -80,26 +80,20 @@ func execute_boss_attack(player: Node2D, attack_type: String) -> void:
 	var base_dmg = stats.damage if (stats != null and "damage" in stats) else 2
 	match attack_type:
 		"ATTACK_QUICK":
-			print("Boss utilise Frappe Rapide !")
-			if is_player_in_range(player_index, 1):
+			print("Boss utilise Tir Rapide (Portée 1-2) !")
+			if is_player_in_range(player_index, 2):
 				player.call("take_damage", base_dmg)
 				print("-> Le joueur subit ", base_dmg, " dégâts.")
-			else:
-				print("-> Attaque rapide dans le vide (joueur hors de portée).")
 		"ATTACK_HEAVY":
-			print("Boss utilise Coup Brutal !")
-			if is_player_in_range(player_index, 2):
+			print("Boss utilise Canon Lourd (Portée 3) !")
+			if is_player_in_range(player_index, 3):
 				player.call("take_damage", base_dmg * 2)
 				print("-> Le joueur subit ", base_dmg * 2, " dégâts lourds !")
-			else:
-				print("-> Coup brutal dans le vide.")
 		"ATTACK_AREA":
-			print("Boss utilise Onde de Choc !")
-			if abs(player_index - current_cell_index) <= boss_size + 1:
+			print("Boss utilise Onde de Choc Globale !")
+			if abs(player_index - current_cell_index) <= boss_size + 2:
 				player.call("take_damage", base_dmg + 1)
-				print("-> Le joueur est touché par l'onde de choc.")
-			else:
-				print("-> Onde de choc dans le vide.")
+				print("-> Le joueur est touché par l'onde de choc à distance.")
 
 func is_player_in_range(player_index: int, max_range: int) -> bool:
 	var boss_left = current_cell_index

@@ -42,18 +42,19 @@ func execute_prepared_action(grid: Node, player: Node2D) -> void:
 			facing_direction = -facing_direction
 			print(stats.name, " se retourne !")
 		"ATTACK":
-			print(stats.name, " attaque dans sa direction !")
+			print(stats.name, " attaque à distance !")
 			if player.has_method("take_damage"):
 				var player_index = int(player.get("current_cell_index"))
 				var offset = player_index - current_cell_index
 				var is_in_front = (facing_direction == 1 and offset > 0) or (facing_direction == -1 and offset < 0)
 				var distance = abs(offset)
-				if is_in_front and distance <= (stats.range_right if facing_direction == 1 else stats.range_left):
+				var max_range = stats.range_right if facing_direction == 1 else stats.range_left
+				if is_in_front and distance <= max_range:
 					var dmg = stats.damage if "damage" in stats else 1
 					player.call("take_damage", dmg)
-					print("Touché ! Le joueur subit ", dmg, " dégâts.")
+					print("Touché ! Le joueur subit ", dmg, " dégâts à distance.")
 				else:
-					print("L'ennemi a frappé dans le vide ! (Le joueur a esquivé/swap)")
+					print("L'ennemi a frappé dans le vide (joueur hors de portée).")
 		"MOVE":
 			var player_index = int(player.get("current_cell_index"))
 			move_toward_player(grid, player_index)
@@ -96,22 +97,16 @@ func move_toward_player(grid: Node, player_index: int) -> void:
 func take_damage(amount: int) -> void:
 	if health <= 0:
 		return
-
 	health -= amount
-
 	if health < 0:
 		health = 0
-
 	print(stats.name, " HP: ", health, "/", stats.hp)
-
 	if health <= 0:
 		die()
 		return
-
 	if animation.sprite_frames.has_animation("hurt"):
 		animation.play("hurt")
 		await animation.animation_finished
-
 	if health > 0 and animation.sprite_frames.has_animation("idle"):
 		animation.play("idle")
 

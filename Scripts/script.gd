@@ -291,20 +291,17 @@ func execute_queue() -> void:
 		for enemy in enemies:
 			if is_instance_valid(enemy):
 				var enemy_index = int(enemy.get("current_cell_index"))
-				var offset = enemy_index - player_index
-				var is_in_front = (facing == 1 and offset > 0) or (facing == -1 and offset < 0)
-				var distance = abs(offset)
-				if is_in_front and distance <= tile.range_distance:
+				var enemy_size = int(enemy.get("boss_size")) if "boss_size" in enemy else 1
+				var offset = 0
+				if facing == 1:
+					offset = enemy_index - player_index
+				else:
+					offset = player_index - (enemy_index + enemy_size - 1)
+				var is_in_front = (facing == 1 and enemy_index > player_index) or (facing == -1 and enemy_index < player_index)
+				if is_in_front and offset > 0 and offset <= tile.range_distance:
 					enemy.call("take_damage", tile.damage)
-					print(tile.tile_name, " inflige ", tile.damage, " dégâts à l'ennemi en case ", enemy_index, " !")
+					print(tile.tile_name, " (Portée: ", tile.range_distance, ") inflige ", tile.damage, " dégâts à distance !")
 					hit_any_enemy = true
-		if not hit_any_enemy:
-			print(tile.tile_name, " rate sa cible (aucun ennemi à portée dans la direction du joueur).")
-		if tile.cooldown_max > 0:
-			tile.start_cooldown()
-			cooldown_list.append(tile)
-		else:
-			player_hand.append(tile)
 	clean_grid_occupants()
 	for enemy in enemies:
 		if is_instance_valid(enemy):
