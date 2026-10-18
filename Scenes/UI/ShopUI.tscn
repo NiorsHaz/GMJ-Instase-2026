@@ -1,0 +1,161 @@
+[gd_scene format=3 uid="uid://e5hxviwrgqvp"]
+
+[ext_resource type="Script" uid="uid://b05ryhv8rgk15" path="res://Scripts/UI/ShopUI.gd" id="1_beo0j"]
+[ext_resource type="Theme" uid="uid://d1n024eaiv47n" path="res://Resources/GameTheme.tres" id="1_l2tbr"]
+[ext_resource type="PackedScene" uid="uid://bxrfh1q1eebgb" path="res://Scenes/UI/ItemSlot.tscn" id="2_l2tbr"]
+[ext_resource type="Script" uid="uid://ccfxfn8ictqty" path="res://Scripts/General/ShopItem.gd" id="3_1l2b4"]
+[ext_resource type="Resource" uid="uid://c6mfx8j4amu7b" path="res://Resources/Word.tres" id="4_8mkpq"]
+[ext_resource type="Resource" uid="uid://cgtmvsc25qmfa" path="res://Resources/Potion.tres" id="5_2yynn"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_r030d"]
+bg_color = Color(0.16862746, 0.11372549, 0.078431375, 1)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0.83137256, 0.6862745, 0.21568628, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_c2fln"]
+bg_color = Color(0.16862746, 0.11372549, 0.078431375, 1)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0.83137256, 0.6862745, 0.21568628, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_l2tbr"]
+bg_color = Color(0.18039216, 0.49019608, 0.19607843, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1l2b4"]
+bg_color = Color(0.2627451, 0.627451, 0.2784314, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_2yynn"]
+bg_color = Color(0.33333334, 0.33333334, 0.33333334, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_beo0j"]
+load_path = "res://.godot/imported/864685.png-973dcdf12e97436ee5bc6820c45f1979.ctex"
+
+[node name="ShopUi" type="Control" unique_id=202046526 node_paths=PackedStringArray("item_grid", "money_label", "large_icon", "item_name_label", "item_price_label", "buy_button", "owned_count_label", "small_item_icon")]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_l2tbr")
+script = ExtResource("1_beo0j")
+item_grid = NodePath("MainHBox/LeftPanel/ItemGrid")
+money_label = NodePath("MainHBox/LeftPanel/MoneyHBox/MoneyLabel")
+large_icon = NodePath("MainHBox/RightPanel/ItemIconLarge")
+item_name_label = NodePath("MainHBox/RightPanel/ItemNameLabel")
+item_price_label = NodePath("MainHBox/RightPanel/ItemPriceLabel")
+buy_button = NodePath("MainHBox/RightPanel/BuyButton")
+owned_count_label = NodePath("MainHBox/RightPanel/InventoryHBox/OwnedCountLabel")
+small_item_icon = NodePath("MainHBox/RightPanel/InventoryHBox/SmallItemIcon")
+item_slot_scene = ExtResource("2_l2tbr")
+items_for_sale = Array[ExtResource("3_1l2b4")]([ExtResource("4_8mkpq"), ExtResource("5_2yynn")])
+
+[node name="Background" type="TextureRect" parent="." unique_id=2082772552]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MainHBox" type="HBoxContainer" parent="." unique_id=986017037]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="LeftPanel" type="VBoxContainer" parent="MainHBox" unique_id=843947558]
+layout_mode = 2
+
+[node name="LeftPanelBackground" type="Panel" parent="MainHBox/LeftPanel" unique_id=1773200000]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_r030d")
+
+[node name="ItemGrid" type="GridContainer" parent="MainHBox/LeftPanel" unique_id=556650916]
+layout_mode = 2
+columns = 3
+
+[node name="MoneyHBox" type="HBoxContainer" parent="MainHBox/LeftPanel" unique_id=1975878742]
+layout_mode = 2
+
+[node name="MoneyIcon" type="TextureRect" parent="MainHBox/LeftPanel/MoneyHBox" unique_id=1420811457]
+layout_mode = 2
+
+[node name="MoneyLabel" type="Label" parent="MainHBox/LeftPanel/MoneyHBox" unique_id=894018291]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.92156863, 0.23137255, 1)
+theme_override_font_sizes/font_size = 28
+text = "999999999 $"
+
+[node name="RightPanel" type="VBoxContainer" parent="MainHBox" unique_id=1015558448]
+layout_mode = 2
+
+[node name="RightPanelBackground" type="Panel" parent="MainHBox/RightPanel" unique_id=525913489]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_c2fln")
+
+[node name="ItemIconLarge" type="TextureRect" parent="MainHBox/RightPanel" unique_id=143460657]
+layout_mode = 2
+
+[node name="ItemNameLabel" type="Label" parent="MainHBox/RightPanel" unique_id=1531131931]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.84313726, 0, 1)
+theme_override_font_sizes/font_size = 48
+text = "WORD"
+
+[node name="ItemPriceLabel" type="Label" parent="MainHBox/RightPanel" unique_id=1649428855]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.5647059, 0.93333334, 0.5647059, 1)
+theme_override_font_sizes/font_size = 28
+text = "5000$
+"
+
+[node name="BuyButton" type="Button" parent="MainHBox/RightPanel" unique_id=2142409307]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+theme_override_styles/normal = SubResource("StyleBoxFlat_l2tbr")
+theme_override_styles/hover = SubResource("StyleBoxFlat_1l2b4")
+theme_override_styles/disabled = SubResource("StyleBoxFlat_2yynn")
+text = "BUY"
+
+[node name="InventoryHBox" type="HBoxContainer" parent="MainHBox/RightPanel" unique_id=1926458743]
+layout_mode = 2
+alignment = 1
+
+[node name="BookIcon" type="TextureRect" parent="MainHBox/RightPanel/InventoryHBox" unique_id=2010779874]
+layout_mode = 2
+texture = SubResource("CompressedTexture2D_beo0j")
+
+[node name="OwnedCountLabel" type="Label" parent="MainHBox/RightPanel/InventoryHBox" unique_id=1352537831]
+layout_mode = 2
+
+[node name="SmallItemIcon" type="TextureRect" parent="MainHBox/RightPanel/InventoryHBox" unique_id=699273956]
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 2

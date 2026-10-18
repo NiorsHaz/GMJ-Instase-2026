@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="ShopItem" format=3 uid="uid://c6mfx8j4amu7b"]
+
+[ext_resource type="Script" uid="uid://ccfxfn8ictqty" path="res://Scripts/General/ShopItem.gd" id="1_c0ebd"]
+
+[resource]
+script = ExtResource("1_c0ebd")
+item_name = "WORD"
+price = 5000
+description = "Un parchemin ancien"
+metadata/_custom_type_script = "uid://ccfxfn8ictqty"
