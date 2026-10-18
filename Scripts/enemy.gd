@@ -96,12 +96,24 @@ func move_toward_player(grid: Node, player_index: int) -> void:
 func take_damage(amount: int) -> void:
 	if health <= 0:
 		return
+
 	health -= amount
+
 	if health < 0:
 		health = 0
+
 	print(stats.name, " HP: ", health, "/", stats.hp)
+
 	if health <= 0:
 		die()
+		return
+
+	if animation.sprite_frames.has_animation("hurt"):
+		animation.play("hurt")
+		await animation.animation_finished
+
+	if health > 0 and animation.sprite_frames.has_animation("idle"):
+		animation.play("idle")
 
 func can_attack_player(player_cell_index: int) -> bool:
 	var distance = player_cell_index - current_cell_index
