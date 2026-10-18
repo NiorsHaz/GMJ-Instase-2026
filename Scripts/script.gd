@@ -170,7 +170,7 @@ func try_move_player(target_index: int) -> void:
 	clean_grid_occupants()
 	var target_cell = horizontal_grid[target_index]
 	var occupant_before_turn = target_cell["occupied_by"]
-	var enemy_on_target_before = null
+	var enemy_on_target_before: Node2D = null
 	if is_instance_valid(occupant_before_turn) and occupant_before_turn != player_instance:
 		enemy_on_target_before = occupant_before_turn
 	for enemy in enemies:
@@ -185,19 +185,24 @@ func try_move_player(target_index: int) -> void:
 			var enemy_index = target_index
 			var movement_dir = target_index - current_index
 			var behind_enemy_index = enemy_index + movement_dir
-			if behind_enemy_index >= 0 and behind_enemy_index < horizontal_grid.size() and horizontal_grid[behind_enemy_index]["occupied_by"] == null:
+			var is_behind_free = false
+			if behind_enemy_index >= 0 and behind_enemy_index < horizontal_grid.size():
+				is_behind_free = (horizontal_grid[behind_enemy_index]["occupied_by"] == null)
+			if is_behind_free:
 				var behind_cell = horizontal_grid[behind_enemy_index]
 				current_cell["occupied_by"] = null
 				behind_cell["occupied_by"] = player_instance
 				player_instance.call("move_to", behind_cell["position"] + center_offset, behind_enemy_index)
+				print("Faufilage : Le joueur s'est faufilé derrière l'ennemi le plus proche !")
 			else:
 				current_cell["occupied_by"] = enemy_on_target_before
 				enemy_on_target_before.call("setup_position", current_cell["position"] + center_offset, current_index)
 				target_cell["occupied_by"] = player_instance
 				player_instance.call("move_to", target_cell["position"] + center_offset, target_index)
+				print("Swap Sandwich : Le joueur a échangé sa place avec l'ennemi adjacent direct !")
 		else:
 			if target_cell["occupied_by"] != null and target_cell["occupied_by"] != player_instance:
-				print("Bloqué par un ennemi qui vient d'avancer !")
+				print("Bloqué : Un ennemi vient de prendre cette case pendant son mouvement !")
 			else:
 				current_cell["occupied_by"] = null
 				target_cell["occupied_by"] = player_instance
