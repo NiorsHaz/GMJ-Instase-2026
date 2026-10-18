@@ -25,7 +25,7 @@ func _ready() -> void:
 	generate_grid()
 	spawn_player()
 	# spawn_enemy()
-	spawn_enemies(2)
+	#spawn_enemies(2)
 	#spawn_boss()
 	setup_deck()
 	if is_instance_valid(enemy_instance):
@@ -264,7 +264,7 @@ func setup_deck() -> void:
 	action_queue.clear()
 	cooldown_list.clear()
 	if books != null:
-		var words = books.get_words()
+		var words = await books.get_words()
 		for word in words:
 			var cd = word.cooldown
 			if cd <= 0:
