@@ -1,6 +1,7 @@
 class_name PlayersStats extends Resource
 
 @export_group("player_stats")
+@export var pv_max := 10
 @export var pv := 10
 @export var stunt := 5
 @export var left_range := 0
